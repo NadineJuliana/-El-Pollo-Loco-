@@ -1,0 +1,3 @@
+class Cloud extends MovableObject {
+    
+}

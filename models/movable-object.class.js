@@ -1,0 +1,3 @@
+class MovableObject extends DrawableObject {
+    
+}
