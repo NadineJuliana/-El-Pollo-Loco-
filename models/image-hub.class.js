@@ -110,7 +110,7 @@ class ImageHub {
             'img/3_enemie_boss_chicken/4_hurt/G22.png',
             'img/3_enemie_boss_chicken/4_hurt/G23.png'
         ],
-        death: [
+        dead: [
             'img/3_enemie_boss_chicken/5_dead/G24.png',
             'img/3_enemie_boss_chicken/5_dead/G25.png',
             'img/3_enemie_boss_chicken/5_dead/G26.png'
