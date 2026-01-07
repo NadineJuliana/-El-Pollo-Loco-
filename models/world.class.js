@@ -62,5 +62,18 @@ class World {
 
     }
 
-   
+    flipImage(mO) {
+        this.ctx.save();
+        this.ctx.translate(mO.width, 0);
+        this.ctx.scale(-1, 1);
+        mO.x = mO.x * -1;
+    }
+
+    flipImageBack(mO) {
+        mO.x = mO.x * -1;
+
+        this.ctx.restore();
+    }
+
+
 }
