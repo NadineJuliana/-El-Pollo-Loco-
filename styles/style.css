@@ -4,8 +4,16 @@ body{
    align-items: center; 
    justify-content: center;
    min-height: 100vh;
+   background-image: url('../img/7_background/layers/air.png');
 }
 
 canvas {
     background-color: black;
+    border-radius: 15px;
+}
+
+h1 {
+    margin: 30px;
+    font-size: 40px;
+    color: #A0220A;
 }
