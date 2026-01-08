@@ -7,6 +7,31 @@ class DrawableObject {
     imageCache = {};
     currentImage = 0;
 
+    offset = { top: 0, right: 0, bottom: 0, left: 0 };
+
+    realX;
+    realY;
+    realWidth;
+    realHeight;
+
+    constructor() {
+        IntervalHub.startInterval(this.getRealFrame, 1000 / 60);
+    }
+
+    getRealFrame = () => {
+        this.realX = this.x + this.offset.left;
+        this.realY = this.y + this.offset.top;
+        this.realWidth = this.width - this.offset.left - this.offset.right;
+        this.realHeight = this.height - this.offset.top - this.offset.bottom;
+    }
+
+    isColliding(mO) {
+        return this.realX + this.realWidth > mO.realX &&
+            this.realY + this.realHeight > mO.realY &&
+            this.realX < mO.realX + mO.realWidth &&
+            this.realY < mO.realY + mO.realHeight
+    }
+
     loadImage(path) {
         this.img = new Image();
         this.img.src = path;
@@ -32,7 +57,7 @@ class DrawableObject {
             ctx.beginPath();
             ctx.lineWidth = '5';
             ctx.strokeStyle = 'blue';
-            ctx.rect(this.x, this.y, this.width, this.height);
+            ctx.rect(this.realX, this.realY, this.realWidth, this.realHeight);
             ctx.stroke();
         }
     }
