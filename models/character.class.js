@@ -3,6 +3,8 @@ class Character extends MovableObject {
     y = 80;
     speed = 10;
 
+    offset = { top: 130, right: 20, bottom: 10, left: 20 }
+
     IMAGES_IDLE = [
         'img/1_character_pepe/1_idle/idle/I-1.png',
         'img/1_character_pepe/1_idle/idle/I-2.png',
@@ -96,8 +98,8 @@ class Character extends MovableObject {
             }
 
             // console.log('this.speedY', this.speedY);
-            if(this.world.keyboard.SPACE && !this.isAboveGround()) {
-                this.jump(); 
+            if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+                this.jump();
             }
 
             this.world.camera_x = -this.x + 100;
@@ -107,7 +109,7 @@ class Character extends MovableObject {
             if (this.isDead()) {
                 this.playAnimation(this.IMAGES_DEAD);
             }
-            else if (this.isHurt()){
+            else if (this.isHurt()) {
                 this.playAnimation(this.IMAGES_HURT);
             }
             else if (this.isAboveGround()) {
@@ -120,5 +122,5 @@ class Character extends MovableObject {
         }, 50);
     }
 
-    
+
 }
