@@ -2,6 +2,7 @@ class Chick extends MovableObject {
     y = 380;
     height = 30;
     width = 40;
+    offset = { top: 5, right: 5, bottom: 5, left: 5 };
     
 
     littleChickenWalking = ImageHub.chicken_small.walk;
