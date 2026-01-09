@@ -30,13 +30,17 @@ class World {
         setInterval(() => {
             this.checkCollisions();
             this.checkThrowObjects();
+            this.checkCollisionCoin();
+            this.checkCollisionBottle();
         }, 200);
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D) {
+        if (this.keyboard.D && this.character.bottleAmount > 0) {
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 50);
             this.throwableObjects.push(bottle);
+            this.character.bottleAmount--;
+            this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
         }
     }
 
@@ -50,6 +54,28 @@ class World {
 
             }
         });
+    }
+
+    checkCollisionCoin() {
+        this.level.coins.forEach((coin) => {
+            if (!coin.isCollected && this.character.isColliding(coin)) {
+                // console.log('Collision with Coin', coin);
+                coin.isCollected = true;
+                this.character.collectCoin();
+                this.statusbarCoin.setPercentage(this.character.coinAmount * 10);
+            }
+        })
+    }
+
+    checkCollisionBottle() {
+        this.level.bottles.forEach((bottle) => {
+            if (!bottle.isCollected && this.character.isColliding(bottle)) {
+                // console.log('Collision with Bottle', bottle);
+                bottle.isCollected = true;
+                this.character.collectBottle();
+                this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
+            }
+        })
     }
 
 
@@ -86,6 +112,9 @@ class World {
     }
 
     addToMap(mO) {
+        if ((mO instanceof Coin || mO instanceof Bottle) && mO.isCollected) {
+            return;
+        }
         if (mO.otherDirection) {
             this.flipImage(mO);
         }
