@@ -1,0 +1,3 @@
+class Bottle extends DrawableObject {
+    
+}
