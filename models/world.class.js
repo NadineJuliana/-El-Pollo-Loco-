@@ -32,6 +32,7 @@ class World {
             this.checkThrowObjects();
             this.checkCollisionCoin();
             this.checkCollisionBottle();
+            this.checkThrowableCollisions();
         }, 200);
     }
 
@@ -42,6 +43,24 @@ class World {
             this.character.bottleAmount--;
             this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
         }
+    }
+
+    checkThrowableCollisions() {
+        this.throwableObjects.forEach((bottle) => {
+
+            if (bottle.y >= bottle.groundY && bottle.speedY <= 0 && !bottle.isSplashed) {
+                bottle.splash();
+            }
+
+            this.level.enemies.forEach(enemy => {
+                if (enemy instanceof Endboss && bottle.isColliding(enemy) &&  !bottle.isSplashed) {
+                    bottle.splash();
+                    enemy.hit();
+                }
+            });
+        });
+
+        this.throwableObjects = this.throwableObjects.filter(b => !b.markedForDeletion);
     }
 
 
