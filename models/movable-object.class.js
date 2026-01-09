@@ -6,8 +6,8 @@ class MovableObject extends DrawableObject {
     acceleration = 2.5;
     energy = 100;
     lastHit = 0;
-    
-   
+
+
 
 
     applyGravity() {
@@ -21,13 +21,13 @@ class MovableObject extends DrawableObject {
 
     isAboveGround() {
         if (this instanceof ThrowableObject) {
-            return true;
+            return this.y < this.groundY;
         }
         if (this.isDeadAnimationPlaying) {
             return true;
         }
         return this.y < 140;
-    
+
     }
 
     hit() {
@@ -63,5 +63,5 @@ class MovableObject extends DrawableObject {
         this.speedY = 30;
     }
 
-    
+
 }
