@@ -46,7 +46,7 @@ class DrawableObject {
 
     }
 
-    
+
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -55,7 +55,10 @@ class DrawableObject {
     }
 
     draw(ctx) {
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        if (this.img) {
+            ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        }
+
     }
 
 

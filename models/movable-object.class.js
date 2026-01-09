@@ -22,10 +22,12 @@ class MovableObject extends DrawableObject {
     isAboveGround() {
         if (this instanceof ThrowableObject) {
             return true;
-        } else {
-            return this.y < 140;
         }
-
+        if (this.isDeadAnimationPlaying) {
+            return true;
+        }
+        return this.y < 140;
+    
     }
 
     hit() {
