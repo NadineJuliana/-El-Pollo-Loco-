@@ -46,6 +46,14 @@ class DrawableObject {
 
     }
 
+    
+    playAnimation(images) {
+        let i = this.currentImage % images.length;
+        let path = images[i];
+        this.img = this.imageCache[path];
+        this.currentImage++;
+    }
+
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
     }
@@ -53,9 +61,9 @@ class DrawableObject {
 
 
     drawFrame(ctx) {
-        if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof Chick) {
+        if (this instanceof Character || this instanceof Chicken || this instanceof Endboss || this instanceof Chick || this instanceof Coin || this instanceof Bottle || this instanceof ThrowableObject) {
             ctx.beginPath();
-            ctx.lineWidth = '5';
+            ctx.lineWidth = '2';
             ctx.strokeStyle = 'blue';
             ctx.rect(this.realX, this.realY, this.realWidth, this.realHeight);
             ctx.stroke();
