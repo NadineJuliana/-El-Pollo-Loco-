@@ -11,6 +11,7 @@ class World {
     statusbarEndboss = new StatusbarEndboss();
     throwableObjects = [];
     coins = [];
+    bottles = [];
 
     constructor(canvas, keyboard,) {
         this.ctx = canvas.getContext('2d');
@@ -69,6 +70,7 @@ class World {
         this.addObjectsToMap(this.level.enemies);
         this.addObjectsToMap(this.throwableObjects);
         this.addObjectsToMap(this.level.coins);
+        this.addObjectsToMap(this.level.bottles);
         this.ctx.translate(-this.camera_x, 0);
 
         let self = this;
