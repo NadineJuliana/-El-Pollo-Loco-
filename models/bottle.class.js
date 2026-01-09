@@ -2,6 +2,7 @@ class Bottle extends DrawableObject {
     height = 70;
     width = 70;
     y = 360;
+    isCollected = false;
 
     bottlesOnGround = ImageHub.salsa_bottle.on_Ground;
 

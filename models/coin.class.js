@@ -1,6 +1,7 @@
 class Coin extends DrawableObject {
     height = 90;
     width = 90;
+    isCollected = false;
 
     coinImage = ImageHub.coins.coin;
 

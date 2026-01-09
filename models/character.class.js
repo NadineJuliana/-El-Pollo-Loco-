@@ -5,6 +5,9 @@ class Character extends MovableObject {
     world;
     offset = { top: 130, right: 20, bottom: 10, left: 20 }
 
+    bottleAmount = 0;
+    coinAmount = 0;
+
     // IMAGES_IDLE = [
     //     'img/1_character_pepe/1_idle/idle/I-1.png',
     //     'img/1_character_pepe/1_idle/idle/I-2.png',
@@ -136,5 +139,15 @@ class Character extends MovableObject {
         }, 50);
     }
 
+    collectBottle() {
+        this.bottleAmount = Math.min(this.bottleAmount + 1, 10);
+        // console.log(this.bottleAmount);
 
+    }
+
+    collectCoin() {
+
+        this.coinAmount = Math.min(this.coinAmount + 1, 10)
+        // console.log(this.coinAmount);
+    }
 }
