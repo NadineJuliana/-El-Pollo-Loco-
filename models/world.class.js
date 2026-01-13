@@ -12,6 +12,7 @@ class World {
     throwableObjects = [];
     coins = [];
     bottles = [];
+    throwing = false;
     isGameOver = false;
     isGameWon = false;
     imgYouLost;
@@ -102,11 +103,15 @@ class World {
     }
 
     checkThrowObjects() {
-        if (this.keyboard.D && this.character.bottleAmount > 0) {
+        if (this.keyboard.D && this.character.bottleAmount > 0 && !this.throwing) {
+            this.throwing = true; // Sperre aktivieren
             let bottle = new ThrowableObject(this.character.x + 50, this.character.y + 50);
             this.throwableObjects.push(bottle);
-            this.character.bottleAmount--;
+            this.character.bottleAmount--; 
             this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
+        }
+        if (!this.keyboard.D) {
+            this.throwing = false;
         }
     }
 
@@ -209,7 +214,7 @@ class World {
             );
         }
     }
-    
+
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
