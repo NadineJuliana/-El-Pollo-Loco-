@@ -18,22 +18,6 @@ class Chicken extends MovableObject {
         this.animate();
     }
 
-
-    // die() {
-    //     this.isDeadAnimationPlaying = true;
-    //     this.loadImages(this.bigChickenDead);
-    //     this.playAnimation(this.bigChickenDead);
-
-    //     setTimeout(() => {
-    //         if (this.world) {
-    //             const index = this.world.level.enemies.indexOf(this);
-    //             if (index > -1) {
-    //                 this.world.level.enemies.splice(index, 1);
-    //             }
-    //         }
-    //     }, 3000);
-    // }
-
     die() {
         this.isDeadAnimationPlaying = true;
         this.setImageFromCache(this.bigChickenDead, 0);
