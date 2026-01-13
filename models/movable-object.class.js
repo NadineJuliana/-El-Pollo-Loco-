@@ -3,7 +3,7 @@ class MovableObject extends DrawableObject {
     speed = 0.15;
     otherDirection = false;
     speedY = 0;
-    acceleration = 2.5;
+    acceleration = 0.7;
     energy = 100;
     lastHit = 0;
 
@@ -32,13 +32,12 @@ class MovableObject extends DrawableObject {
 
 
     hit(damage = 5) {
-        this.energy -= damage;
+        const now = Date.now();
+        if (now - this.lastHit < 1000) return; 
 
-        if (this.energy < 0) {
-            this.energy = 0;
-        } else {
-            this.lastHit = Date.now();
-        }
+        this.energy -= damage;
+        if (this.energy < 0) this.energy = 0;
+        this.lastHit = now;
     }
 
     isHurt() {
@@ -61,7 +60,7 @@ class MovableObject extends DrawableObject {
     }
 
     jump() {
-        this.speedY = 30;
+        this.speedY = 15;
     }
 
     setImageFromCache(images, index) {
