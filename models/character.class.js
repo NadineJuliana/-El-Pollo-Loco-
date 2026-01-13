@@ -8,6 +8,7 @@ class Character extends MovableObject {
     lastMoveTime = new Date().getTime();
     isJumpingAnimationPlaying = false;
     jumpAnimationFrame = 0;
+    lastY = this.y;
 
     bottleAmount = 0;
     coinAmount = 0;
@@ -27,7 +28,7 @@ class Character extends MovableObject {
         this.loadImages(this.imagesJumping);
         this.loadImages(this.imagesHurt);
         this.loadImages(this.imagesDead);
-        this.applyGravity();
+        // this.applyGravity();
         this.animate();
     }
 
@@ -50,12 +51,17 @@ class Character extends MovableObject {
         if (!this.isJumpingAnimationPlaying) {
             this.isJumpingAnimationPlaying = true;
             this.jumpAnimationFrame = 0;
+            this.jumpAnimationTimer = 0;
         }
-        if (this.jumpAnimationFrame < this.imagesJumping.length) {
-            this.setImageFromCache(this.imagesJumping, this.jumpAnimationFrame++);
-        } else {
-            this.setImageFromCache(this.imagesJumping, this.imagesJumping.length - 1);
+        this.jumpAnimationTimer += 110;
+        if (this.jumpAnimationTimer >= 150) {
+            this.jumpAnimationTimer = 0;
+            if (this.jumpAnimationFrame < this.imagesJumping.length - 1) {
+                this.jumpAnimationFrame++;
+            }
         }
+
+        this.setImageFromCache(this.imagesJumping, this.jumpAnimationFrame);
     }
 
     animateIdle() {
@@ -100,7 +106,7 @@ class Character extends MovableObject {
         if (animationDone) this.deathJumpPhase();
     }
 
-   
+
     moveRightIfPossible() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();
@@ -126,14 +132,22 @@ class Character extends MovableObject {
         }
         return false;
     }
-
     updateMovement() {
-        const now = Date.now();
+        this.lastY = this.y;
+
         const jumped = this.jumpIfPossible();
         const moved = this.moveRightIfPossible() || this.moveLeftIfPossible();
-        if (jumped || moved) this.lastMoveTime = now;
+        if (jumped || moved) this.lastMoveTime = Date.now();
+
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY;
+            this.speedY -= this.acceleration;
+            if (this.y > 140) this.y = 140;
+        }
+
         this.world.camera_x = -this.x + 100;
     }
+
 
     updateAnimation() {
         if (this.isDead()) this.animateDead();
