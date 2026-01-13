@@ -12,11 +12,16 @@ class World {
     throwableObjects = [];
     coins = [];
     bottles = [];
+    isGameOver = false;
+    isGameWon = false;
+    imgYouLost;
+    imgYouWin;
 
     constructor(canvas, keyboard,) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
         this.keyboard = keyboard;
+        this.loadWinLoseImages();
         this.draw();
         this.setWorld();
         this.run();
@@ -43,17 +48,27 @@ class World {
             this.checkThrowableCollisions();
             this.checkEndbossDistance();
             this.checkEndbossState();
+            this.checkGameOver();
         }, 1000 / 60);
     }
+
+    loadWinLoseImages() {
+        this.imgYouLost = new Image();
+        this.imgYouLost.src = 'img/9_win_lost_screens/2_lost/Game Over.png';
+
+        this.imgYouWin = new Image();
+        this.imgYouWin.src = 'img/9_win_lost_screens/1_win/You Win A.png';
+    }
+
 
     checkStomp(enemy) {
         const charBottom = this.character.realY + this.character.realHeight;
         const charOldBottom = this.character.lastY + this.character.realHeight;
         const enemyTop = enemy.realY;
         if (charOldBottom <= enemyTop && charBottom >= enemyTop && this.character.speedY < 0) {
-            if (!enemy.isDeadAnimationPlaying) { 
+            if (!enemy.isDeadAnimationPlaying) {
                 enemy.die();
-                this.character.speedY = 8; 
+                this.character.speedY = 8;
             }
             return true;
         }
@@ -160,6 +175,41 @@ class World {
         });
     }
 
+    checkGameOver() {
+        const character = this.character;
+        const endboss = this.level.enemies.find(e => e instanceof Endboss);
+        if (!this.isGameOver && character.isDead() && character.y > this.canvas.height) {
+            this.isGameOver = true;
+        }
+        if (!this.isGameWon && endboss && endboss.isDead() && endboss.deadAnimationFrame >= endboss.endbossDead.length - 1) {
+            this.isGameWon = true;
+        }
+    }
+
+    drawYouLostScreen() {
+        if (this.isGameOver && this.imgYouLost) {
+            this.ctx.drawImage(
+                this.imgYouLost,
+                this.canvas.width / 2 - 200,
+                this.canvas.height / 2 - 100,
+                400,
+                200
+            );
+        }
+    }
+
+    drawYouWinScreen() {
+        if (this.isGameWon && this.imgYouWin) {
+            this.ctx.drawImage(
+                this.imgYouWin,
+                this.canvas.width / 2 - 200,
+                this.canvas.height / 2 - 100,
+                400,
+                200
+            );
+        }
+    }
+    
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
@@ -179,6 +229,9 @@ class World {
         this.addObjectsToMap(this.level.coins);
         this.addObjectsToMap(this.level.bottles);
         this.ctx.translate(-this.camera_x, 0);
+
+        this.drawYouLostScreen();
+        this.drawYouWinScreen();
 
         let self = this;
         requestAnimationFrame(function () {
