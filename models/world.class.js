@@ -24,6 +24,11 @@ class World {
 
     setWorld() {
         this.character.world = this;
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss) {
+                enemy.world = this;
+            }
+        });
     }
 
     run() {
@@ -33,6 +38,8 @@ class World {
             this.checkCollisionCoin();
             this.checkCollisionBottle();
             this.checkThrowableCollisions();
+            this.checkEndbossDistance();
+            this.checkEndbossState();
         }, 200);
     }
 
@@ -53,9 +60,12 @@ class World {
             }
 
             this.level.enemies.forEach(enemy => {
-                if (enemy instanceof Endboss && bottle.isColliding(enemy) &&  !bottle.isSplashed) {
+                if (enemy instanceof Endboss && bottle.isColliding(enemy) && !bottle.hasHit) {
+                    bottle.hasHit = true;
                     bottle.splash();
-                    enemy.hit();
+                    enemy.hit(10);
+                    const percent = (enemy.energy / enemy.maxEnergy) * 100;
+                    this.statusbarEndboss.setPercentage(enemy.energy);
                 }
             });
         });
@@ -63,14 +73,11 @@ class World {
         this.throwableObjects = this.throwableObjects.filter(b => !b.markedForDeletion);
     }
 
-
     checkCollisions() {
-        this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                // console.log('Collision with Character', enemy);
+        this.level.enemies.forEach(enemy => {
+            if (!(enemy instanceof Endboss) && this.character.isColliding(enemy)) {
                 this.character.hit();
                 this.statusbarHealth.setPercentage(this.character.energy);
-
             }
         });
     }
@@ -95,6 +102,28 @@ class World {
                 this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
             }
         })
+    }
+
+    checkEndbossDistance() {
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss) {
+                const distance = Math.abs(this.character.x - enemy.x);
+
+                enemy.isAlert = distance < 500;
+                enemy.isAttacking = distance < 200;
+            }
+        });
+    }
+
+    checkEndbossState() {
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Endboss) {
+                const distance = Math.abs(this.character.x - enemy.x);
+
+                enemy.isAlert = distance < 600;
+                enemy.isAttacking = distance < 150;
+            }
+        });
     }
 
 
