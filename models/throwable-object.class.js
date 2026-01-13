@@ -6,6 +6,7 @@ class ThrowableObject extends MovableObject {
     bottleSplash = ImageHub.salsa_bottle.splash;
 
     isSplashed = false;
+    hasHit = false;
     groundY = 350;
 
 
