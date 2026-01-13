@@ -100,12 +100,7 @@ class Character extends MovableObject {
         if (animationDone) this.deathJumpPhase();
     }
 
-    setImageFromCache(images, index) {
-        const path = images[index];
-        if (this.imageCache[path]) this.img = this.imageCache[path];
-        else console.warn('Image not loaded:', path);
-    }
-
+   
     moveRightIfPossible() {
         if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
             this.moveRight();

@@ -30,14 +30,15 @@ class MovableObject extends DrawableObject {
 
     }
 
-    hit() {
-        this.energy -= 5;
+
+    hit(damage = 5) {
+        this.energy -= damage;
+
         if (this.energy < 0) {
             this.energy = 0;
         } else {
-            this.lastHit = new Date().getTime();
+            this.lastHit = Date.now();
         }
-        console.log(this.energy);
     }
 
     isHurt() {
@@ -61,6 +62,12 @@ class MovableObject extends DrawableObject {
 
     jump() {
         this.speedY = 30;
+    }
+
+    setImageFromCache(images, index) {
+        const path = images[index];
+        if (this.imageCache[path]) this.img = this.imageCache[path];
+        // else console.warn('Image not loaded:', path);
     }
 
 
