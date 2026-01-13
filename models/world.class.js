@@ -29,6 +29,9 @@ class World {
                 enemy.world = this;
             }
         });
+        this.level.enemies.forEach(enemy => {
+            enemy.world = this;
+        });
     }
 
     run() {
@@ -74,6 +77,13 @@ class World {
     }
 
     checkCollisions() {
+        this.checkChickenStomp();
+        this.level.enemies.forEach(enemy => {
+            if (!(enemy instanceof Chicken) && this.character.isColliding(enemy)) {
+                this.character.hit();
+                this.statusbarHealth.setPercentage(this.character.energy);
+            }
+        });
         this.level.enemies.forEach(enemy => {
             if (!(enemy instanceof Endboss) && this.character.isColliding(enemy)) {
                 this.character.hit();
@@ -122,6 +132,17 @@ class World {
 
                 enemy.isAlert = distance < 600;
                 enemy.isAttacking = distance < 150;
+            }
+        });
+    }
+
+    checkChickenStomp() {
+        this.level.enemies.forEach(enemy => {
+            if (enemy instanceof Chicken || enemy instanceof Chick) {
+                if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDeadAnimationPlaying) {
+                    enemy.die();
+                    this.character.speedY = 20;
+                }
             }
         });
     }

@@ -3,7 +3,8 @@ class Chick extends MovableObject {
     height = 30;
     width = 40;
     offset = { top: 5, right: 5, bottom: 5, left: 5 };
-    
+
+    isDeadAnimationPlaying = false;
 
     littleChickenWalking = ImageHub.chicken_small.walk;
     littleChickenDead = ImageHub.chicken_small.dead;
@@ -17,14 +18,31 @@ class Chick extends MovableObject {
         this.animate();
     }
 
+
+    die() {
+        this.isDeadAnimationPlaying = true;
+        this.setImageFromCache(this.littleChickenDead, 0);
+        setTimeout(() => {
+            if (this.world) {
+                const index = this.world.level.enemies.indexOf(this);
+                if (index > -1) {
+                    this.world.level.enemies.splice(index, 1);
+                }
+            }
+        }, 1000);
+    }
+
     animate() {
-        setInterval(() => {
-            this.moveLeft();
+        this.movementInterval = setInterval(() => {
+            if (!this.isDeadAnimationPlaying) this.moveLeft();
         }, 1000 / 60);
 
-        setInterval(() => {
-            this.playAnimation(this.littleChickenWalking);
+        this.animationInterval = setInterval(() => {
+            if (!this.isDeadAnimationPlaying) {
+                this.playAnimation(this.littleChickenWalking);
+            } else {
+                this.setImageFromCache(this.littleChickenDead, 0);
+            }
         }, 200);
-
     }
 }
