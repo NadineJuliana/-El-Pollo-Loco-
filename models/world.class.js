@@ -36,14 +36,54 @@ class World {
 
     run() {
         setInterval(() => {
-            this.checkCollisions();
+            this.checkEnemyCollisions();
             this.checkThrowObjects();
             this.checkCollisionCoin();
             this.checkCollisionBottle();
             this.checkThrowableCollisions();
             this.checkEndbossDistance();
             this.checkEndbossState();
-        }, 200);
+        }, 1000 / 60);
+    }
+
+    checkStomp(enemy) {
+        const charBottom = this.character.realY + this.character.realHeight;
+        const charOldBottom = this.character.lastY + this.character.realHeight;
+        const enemyTop = enemy.realY;
+        if (charOldBottom <= enemyTop && charBottom >= enemyTop && this.character.speedY < 0) {
+            if (!enemy.isDeadAnimationPlaying) { 
+                enemy.die();
+                this.character.speedY = 8; 
+            }
+            return true;
+        }
+        return false;
+    }
+
+    checkSideOrBottomHit(enemy) {
+        const charBottom = this.character.realY + this.character.realHeight;
+        const charTop = this.character.realY;
+        const enemyTop = enemy.realY;
+        const enemyBottom = enemy.realY + enemy.realHeight;
+        if (charBottom > enemyTop && charTop < enemyBottom) {
+            this.character.hit();
+            this.statusbarHealth.setPercentage(this.character.energy);
+        }
+    }
+
+
+    checkEnemyCollisions() {
+        for (const enemy of this.level.enemies) {
+            if (!this.character.isColliding(enemy)) continue;
+
+            if (enemy instanceof Chicken || enemy instanceof Chick) {
+                const stomped = this.checkStomp(enemy);
+                if (!stomped) this.checkSideOrBottomHit(enemy);
+            } else {
+                this.character.hit();
+                this.statusbarHealth.setPercentage(this.character.energy);
+            }
+        }
     }
 
     checkThrowObjects() {
@@ -74,22 +114,6 @@ class World {
         });
 
         this.throwableObjects = this.throwableObjects.filter(b => !b.markedForDeletion);
-    }
-
-    checkCollisions() {
-        this.checkChickenStomp();
-        this.level.enemies.forEach(enemy => {
-            if (!(enemy instanceof Chicken) && this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusbarHealth.setPercentage(this.character.energy);
-            }
-        });
-        this.level.enemies.forEach(enemy => {
-            if (!(enemy instanceof Endboss) && this.character.isColliding(enemy)) {
-                this.character.hit();
-                this.statusbarHealth.setPercentage(this.character.energy);
-            }
-        });
     }
 
     checkCollisionCoin() {
@@ -135,18 +159,6 @@ class World {
             }
         });
     }
-
-    checkChickenStomp() {
-        this.level.enemies.forEach(enemy => {
-            if (enemy instanceof Chicken || enemy instanceof Chick) {
-                if (this.character.isColliding(enemy) && this.character.speedY < 0 && !enemy.isDeadAnimationPlaying) {
-                    enemy.die();
-                    this.character.speedY = 20;
-                }
-            }
-        });
-    }
-
 
     draw() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
