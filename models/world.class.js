@@ -150,10 +150,13 @@ class World {
   checkThrowObjects() {
     if (this.keyboard.D && this.character.bottleAmount > 0 && !this.throwing) {
       this.throwing = true;
+      const direction = this.character.otherDirection ? -1 : 1;
       let bottle = new ThrowableObject(
-        this.character.x + 50,
+        this.character.x + 50 * direction,
         this.character.y + 50,
       );
+      bottle.otherDirection = this.character.otherDirection;
+      bottle.speedX = 6 * direction;
       this.throwableObjects.push(bottle);
       this.character.bottleAmount--;
       this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
@@ -330,13 +333,12 @@ class World {
 
   flipImage(mO) {
     this.ctx.save();
-    this.ctx.translate(mO.width, 0);
+    this.ctx.translate(mO.x + mO.width / 2, 0);
     this.ctx.scale(-1, 1);
-    mO.x = mO.x * -1;
+    this.ctx.translate(-(mO.x + mO.width / 2), 0);
   }
 
   flipImageBack(mO) {
-    mO.x = mO.x * -1;
     this.ctx.restore();
   }
 }
