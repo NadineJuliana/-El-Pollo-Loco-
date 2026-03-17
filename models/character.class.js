@@ -3,12 +3,13 @@ class Character extends MovableObject {
     y = 80;
     speed = 10;
     world;
-    offset = { top: 130, right: 20, bottom: 10, left: 20 }
+    offset = { top: 130, right: 20, bottom: 15, left: 20 }
     idleTime = 0;
     lastMoveTime = new Date().getTime();
     isJumpingAnimationPlaying = false;
     jumpAnimationFrame = 0;
     lastY = this.y;
+    groundLevel = 140;
 
     bottleAmount = 0;
     coinAmount = 0;
@@ -132,6 +133,7 @@ class Character extends MovableObject {
         }
         return false;
     }
+
     updateMovement() {
         this.lastY = this.y;
 
