@@ -26,6 +26,7 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    AudioHub.playOne(AudioHub.gameStart);
     this.loadWinLoseImages();
     this.draw();
     this.setWorld();
@@ -110,6 +111,12 @@ class World {
 
   handleStomp(enemy) {
     enemy.die();
+    if (enemy instanceof Chicken) {
+      AudioHub.playOne(AudioHub.chickenDead);
+    }
+    if (enemy instanceof Chick) {
+      AudioHub.playOne(AudioHub.chicksDead);
+    }
     this.character.speedY = 12;
   }
 
@@ -201,6 +208,7 @@ class World {
       if (!coin.isCollected && this.character.isColliding(coin)) {
         // console.log('Collision with Coin', coin);
         coin.isCollected = true;
+        AudioHub.playOne(AudioHub.coinCollect);
         this.character.collectCoin();
         this.statusbarCoin.setPercentage(this.character.coinAmount * 10);
       }
@@ -212,6 +220,7 @@ class World {
       if (!bottle.isCollected && this.character.isColliding(bottle)) {
         // console.log('Collision with Bottle', bottle);
         bottle.isCollected = true;
+        AudioHub.playOne(AudioHub.bottleCollect);
         this.character.collectBottle();
         this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
       }

@@ -45,6 +45,7 @@ class ThrowableObject extends MovableObject {
   splash() {
     if (this.isSplashed) return;
     this.isSplashed = true;
+    AudioHub.playOne(AudioHub.bottleBreak);
     if (this.y > this.groundY) {
       this.y = this.groundY;
     }
