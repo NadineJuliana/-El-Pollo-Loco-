@@ -19,6 +19,8 @@ class Endboss extends MovableObject {
   world;
   otherDirection = false;
   turning = false;
+  hasPlayedAlert = false;
+  hasPlayedDead = false;
   turnStartTime = 0;
   turnDuration = 400;
   endbossWalking = ImageHub.endboss.walk;
@@ -36,7 +38,7 @@ class Endboss extends MovableObject {
     this.loadImages(this.endbossAttack);
     this.loadImages(this.endbossHurt);
     this.loadImages(this.endbossDead);
-    this.x = 2800;
+    this.x = this.spawnX;
     this.animate();
   }
 
@@ -89,7 +91,6 @@ class Endboss extends MovableObject {
 
   animateByState() {
     const map = {
-      dead: () => this.animateDead(),
       hurt: () => this.animateHurt(),
       alert: () => this.animateAlert(),
       chase: () => this.animateWalking(),
@@ -102,9 +103,12 @@ class Endboss extends MovableObject {
 
   updateState() {
     if (!this.canUpdateState()) return;
-    this.handleDetection();
-    this.transitionFromAlert();
-    this.handleCurrentState();
+    if (!this.isDead()) {
+      this.handleDetection();
+      this.transitionFromAlert();
+      this.handleCurrentState();
+    }
+    this.handleAlertSound();
   }
 
   canUpdateState() {
@@ -130,15 +134,6 @@ class Endboss extends MovableObject {
       return: () => this.handleReturn(),
     };
     (map[this.state] || (() => {}))();
-  }
-
-  checkIdleDistance() {
-    if (Math.abs(this.world.character.x - this.x) < 400) {
-      this.state = "alert";
-      this.alertPlayed = false;
-      this.turning = true;
-      this.turnStartTime = Date.now();
-    }
   }
 
   handleDetection() {
@@ -244,6 +239,7 @@ class Endboss extends MovableObject {
     if (this.isColliding(character)) {
       character.hit(10);
       this.world.statusbarHealth.setPercentage(character.energy);
+      AudioHub.playOne(AudioHub.endbossAttack);
       this.lastAttack = now;
     }
   }
@@ -254,14 +250,26 @@ class Endboss extends MovableObject {
     if (this.energy <= 0) {
       this.energy = 0;
       this.state = "dead";
+      AudioHub.playOne(AudioHub.endbossDead, 0.4);
       return;
     }
     this.state = "hurt";
+    AudioHub.playOne(AudioHub.endbossAttack);
     clearTimeout(this.hurtTimeout);
     this.hurtTimeout = setTimeout(() => {
-      if (this.energy > 0) {
+      if (!this.isDead()) {
         this.state = "chase";
       }
     }, 500);
+  }
+
+  handleAlertSound() {
+    if (this.state === "alert" && !this.hasPlayedAlert) {
+      AudioHub.playOne(AudioHub.enbossApproach, 1);
+      this.hasPlayedAlert = true;
+    }
+    if (this.state !== "alert") {
+      this.hasPlayedAlert = false;
+    }
   }
 }
