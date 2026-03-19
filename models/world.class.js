@@ -167,6 +167,7 @@ class World {
       this.throwableObjects.push(bottle);
       this.character.bottleAmount--;
       this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
+      this.character.registerActivity();
     }
     if (!this.keyboard.D) {
       this.throwing = false;
