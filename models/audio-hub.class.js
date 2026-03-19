@@ -19,7 +19,7 @@ class AudioHub {
 
   static enbossApproach = new Audio("audio/endboss/endbossApproach.wav");
   static endbossAttack = new Audio("audio/endboss/endbossAttack.mp3");
-  static enbossDead = new Audio("audio/endboss/enbossDead.mp3");
+  static endbossDead = new Audio("audio/endboss/enbossDead.mp3");
 
   static allSounds = [
     AudioHub.backgroundMusic,
@@ -36,7 +36,7 @@ class AudioHub {
     AudioHub.coinCollect,
     AudioHub.enbossApproach,
     AudioHub.endbossAttack,
-    AudioHub.enbossDead,
+    AudioHub.endbossDead,
   ];
 
   static initSounds() {
@@ -47,9 +47,9 @@ class AudioHub {
     });
   }
 
-  static playOne(sound) {
+  static playOne(sound, volume = this.volume) {
     if (this.muted) return;
-    sound.volume = this.volume;
+    sound.volume = volume;
     sound.currentTime = 0;
     sound.play();
   }
