@@ -127,7 +127,7 @@ class Endboss extends MovableObject {
 
   handleCurrentState() {
     const map = {
-      idle: () => this.checkIdleDistance(),
+      idle: () => {},
       alert: () => this.handleAlert(),
       chase: () => this.handleChase(),
       attack: () => this.handleAttack(),
