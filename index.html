@@ -1,13 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html translate="no" lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="img/2_enemies_chicken/chicken_normal/1_walk/1_w.png" type="image/x-icon">
-    <link rel="stylesheet" href="styles/fonts.css">
-    <link rel="stylesheet" href="styles/standard.css">
-    <link rel="stylesheet" href="./styles/style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="img/2_enemies_chicken/chicken_normal/1_walk/1_w.png"
+      type="image/x-icon"
+    />
+    <link rel="stylesheet" href="styles/fonts.css" />
+    <link rel="stylesheet" href="styles/standard.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
     <title>El Pollo Loco</title>
     <script src="models/image-hub.class.js"></script>
     <script src="models/interval-hub.class.js"></script>
@@ -30,14 +33,179 @@
     <script src="models/level.class.js"></script>
     <script src="models/throwable-object.class.js"></script>
     <script src="models/enboss.class.js"></script>
-
+    <script src="js/ui.js"></script>
     <script src="levels/level1.js"></script>
     <script src="js/game.js"></script>
-</head>
+  </head>
 
-<body onload="init()">
+  <body onload="init()">
     <h1>El Pollo Loco</h1>
     <canvas id="canvas" width="720px" height="480px"></canvas>
-</body>
+    <div class="buttons">
+      <button class="button__dialog" onclick="openInstructions()">
+        Instructions
+      </button>
+      <button class="button__dialog" onclick="openImprint()">Imprint</button>
+    </div>
 
+    <dialog id="instructions" class="instructions__dialog">
+      <div class="dialog__header">
+        <button class="close__button" onclick="closeInstructions()">X</button>
+        <h2>Instructions</h2>
+      </div>
+      <div class="instructions__content">
+        <h3>How to Play</h3>
+        <h4>Controls</h4>
+
+        <ul>
+          <li>
+            Move right:
+            <img
+              class="img__dialog"
+              src="icons/001-left-arrow.png"
+              alt="Keyboard Left"
+            />
+          </li>
+          <li>
+            Move left:
+            <img
+              class="img__dialog"
+              src="icons/003-right-arrow.png"
+              alt="Keyboard Right"
+            />
+          </li>
+          <li>
+            Jump:
+            <img
+              class="img__dialog"
+              src="icons/004-space.png"
+              alt="Keyboard Space"
+            />
+          </li>
+          <li>
+            Throw:
+            <img
+              class="img__dialog"
+              src="icons/005-letter-d.png"
+              alt="Keyboard D"
+            />
+          </li>
+        </ul>
+
+        <h4>Mobile Controls</h4>
+        <ul>
+          <li>
+            Move right:
+            <img
+              class="img__dialog"
+              src="icons/001-left-arrow.png"
+              alt="Arrow Left"
+            />
+          </li>
+          <li>
+            Move left:
+            <img
+              class="img__dialog"
+              src="icons/003-right-arrow.png"
+              alt="Arrow Right"
+            />
+          </li>
+          <li>
+            Jump:
+            <img
+              class="img__dialog"
+              src="icons/002-up-arrow.png"
+              alt="Arrow Up"
+            />
+          </li>
+          <li>
+            Throw:
+            <img
+              class="img__dialog"
+              src="img/4_salsa_bottle/salsa_bottle.png"
+              alt="Button Bottle"
+            />
+          </li>
+        </ul>
+
+        <h4>Game Buttons</h4>
+        <ul>
+          <li>
+            Turn game sound on or off:
+            <img src="icons/001-volume.png" alt="Mute Button" /> /
+            <img src="icons/002-enable-sound.png" alt="Unmute Button" />
+          </li>
+          <li>
+            Switch or exit fullscreen mode:
+            <img src="icons/009-maximize.png" alt="Maximize Button" /> /
+            <img src="icons/007-minimize-1.png" alt="Minimize Button" />
+          </li>
+          <li>
+            Restart the game:
+            <img src="icons/004-restart.png" alt="Restart Button" />
+          </li>
+          <li>
+            Toggle mobile controls:
+            <img src="icons/011-control.png" alt="Mobile Control Button" />
+          </li>
+          <li>
+            Return to home:
+            <img src="icons/003-home.png" alt="Home Button" />
+          </li>
+        </ul>
+        <h4>Tips</h4>
+
+        <p>Collect coins and bottles</p>
+        <p>Use jump and attack wisely</p>
+        <p>Explore the level to find the best path</p>
+
+        <p>Good luck and have fun playing!</p>
+      </div>
+    </dialog>
+
+    <dialog id="imprint" class="imprint__dialog">
+      <div class="dialog__header">
+        <button class="close__button" onclick="closeImprint()">X</button>
+        <h2>Imprint</h2>
+      </div>
+      <div class="imprint__content">
+        <h4>Information according to Section 5 TMG:</h4>
+        <p>Nadine Bauer</p>
+        <p>Birkenweg 2c</p>
+        <p>82269 Geltendorf</p>
+        <p>Germany</p>
+        <h4>Contact:</h4>
+        <p>Phone: 08193 9982700</p>
+        <p>Email: nadine.juliana.b@web.de</p>
+        <p>
+          <strong
+            >Responsible for content according to Section 55 (2) RStV:</strong
+          >
+        </p>
+        <p>Nadine Bauer</p>
+        <p>Address as above</p>
+        <p>
+          This imprint also applies to the 2d jump and run game “El Pollo Loco”.
+        </p>
+        <h4>Liability for Content:</h4>
+        <p>
+          The contents of our game have been created with the utmost care.
+          However, we cannot guarantee the accuracy, completeness, or timeliness
+          of the content.
+        </p>
+        <h4>Liability for Links:</h4>
+        <p>
+          Our game may contain links to external websites of third parties, over
+          whose content we have no influence. Therefore, we cannot accept any
+          liability for these external contents.
+        </p>
+        <p>
+          Source:
+          <a href="https://www.e-recht24.de/impressum-generator.html"
+            >https://www.e-recht24.de/impressum-generator.html</a
+          >
+        </p>
+      </div>
+    </dialog>
+  </body>
 </html>

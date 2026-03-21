@@ -1,10 +1,10 @@
-body{
-   display: flex;
-   flex-direction: column;
-   align-items: center; 
-   justify-content: center;
-   min-height: 100vh;
-   background-image: url('../img/7_background/layers/air.png');
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100dvh;
+    background-image: url('../img/7_background/layers/air.png');
 }
 
 canvas {
@@ -16,4 +16,101 @@ h1 {
     margin: 30px;
     font-size: 40px;
     color: #A0220A;
+}
+
+h2 {
+    font-size: 32px;
+    padding: 16px;
+}
+
+h3 {
+    font-size: 24px;
+    padding: 16px;
+}
+
+h4 {
+    font-size: 20px;
+    padding: 20px;
+}
+
+.buttons {
+    padding: 16px;
+}
+
+.button__dialog {
+    width: 150px;
+    height: 40px;
+    background-color: rgb(175, 212, 227);
+    color: #A0220A;
+    border: 1px solid #A0220A;
+    border-radius: 10px;
+    font-weight: bold;
+    margin: 8px;
+}
+
+.button__dialog:hover {
+    color: rgb(175, 212, 227);
+    border: 1px solid rgb(175, 212, 227);
+    background-color: #A0220A;
+}
+
+dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 720px;
+    height: 480px;
+    max-width: 90%;
+    max-height: 60%;
+    overflow: auto;
+    padding: 24px;
+    border: none;
+    background-color: rgb(210, 190, 154);
+    border-radius: 15px;
+    scrollbar-width: none;
+    color: #A0220A;
+
+}
+
+.dialog__header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.instructions__content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* padding: 0 200px 0 200px; */
+}
+
+.img__dialog {
+    width: 48px;
+    height: 48px;
+}
+
+
+li {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 8px;
+}
+
+p {
+    padding: 8px 20px;
+}
+
+.close__button {
+    color: #A0220A;
+    background: none;
+    padding: 4px 8px 4px 8px;
+    border: none;
+    font-size: 24px;
 }
