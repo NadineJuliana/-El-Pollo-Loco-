@@ -16,8 +16,14 @@ function startGame() {
   document.getElementById("canvas").style.display = "block";
   AudioHub.startBackgroundMusic();
   init();
+  startUIUpdater();
 }
 
+function startUIUpdater() {
+  setInterval(() => {
+    updateUI();
+  }, 100);
+}
 
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 39) keyboard.RIGHT = true;
