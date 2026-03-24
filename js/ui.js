@@ -16,26 +16,29 @@ function closeImprint() {
 
 function updateUI() {
   if (!world) return;
-  const overlay = document.querySelector(".ui__overlay");
+
   if (world.isGameOver) {
-    showLoseScreen();
+    document.getElementById("lostScreen").classList.remove("d-none");
+  } else {
+    document.getElementById("lostScreen").classList.add("d-none");
   }
+
   if (world.isGameWon) {
-    showWinScreen();
+    document.getElementById("winScreen").classList.remove("d-none");
+  } else {
+    document.getElementById("winScreen").classList.add("d-none");
   }
-}
-
-function showLoseScreen() {
-  document.getElementById("loseScreen").classList.remove("d-none");
-}
-
-function showWinScreen() {
-  document.getElementById("winScreen").classList.remove("d-none");
 }
 
 function backHome() {}
 
-function restartGame() {}
+function restartGame() {
+  IntervalHub.stopAllIntervals();
+  AudioHub.stopAll();
+  document.getElementById("loseScreen").classList.add("d-none");
+  document.getElementById("winScreen").classList.add("d-none");
+  startGame();
+}
 
 function toggleSound() {
   if (AudioHub.muted) {
