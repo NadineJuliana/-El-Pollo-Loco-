@@ -35,18 +35,22 @@ class World {
 
   setWorld() {
     this.character.world = this;
-    this.level.enemies.forEach((enemy) => {
-      if (enemy instanceof Endboss) {
-        enemy.world = this;
-      }
-    });
+    this.character.animate();
     this.level.enemies.forEach((enemy) => {
       enemy.world = this;
+      enemy.animate();
+    });
+    this.level.coins.forEach((coin) => {
+      coin.animate();
+    });
+    this.level.clouds.forEach((cloud) => {
+      cloud.animate();
     });
   }
 
   run() {
-    setInterval(() => {
+    IntervalHub.startInterval(() => {
+      if (this.isGameOver) return;
       this.checkEnemyCollisions();
       this.checkThrowObjects();
       this.checkCollisionCoin();
@@ -207,7 +211,6 @@ class World {
   checkCollisionCoin() {
     this.level.coins.forEach((coin) => {
       if (!coin.isCollected && this.character.isColliding(coin)) {
-        // console.log('Collision with Coin', coin);
         coin.isCollected = true;
         AudioHub.playOne(AudioHub.coinCollect);
         this.character.collectCoin();
@@ -219,7 +222,6 @@ class World {
   checkCollisionBottle() {
     this.level.bottles.forEach((bottle) => {
       if (!bottle.isCollected && this.character.isColliding(bottle)) {
-        // console.log('Collision with Bottle', bottle);
         bottle.isCollected = true;
         AudioHub.playOne(AudioHub.bottleCollect);
         this.character.collectBottle();
@@ -251,12 +253,18 @@ class World {
   checkGameOver() {
     const character = this.character;
     const endboss = this.level.enemies.find((e) => e instanceof Endboss);
-    if (
-      !this.isGameOver &&
-      character.isDead() &&
-      character.y > this.canvas.height
-    ) {
-      this.isGameOver = true;
+    if (!this.isGameOver && character.isDead()) {
+      this.keyboard.RIGHT = false;
+      this.keyboard.LEFT = false;
+      this.keyboard.SPACE = false;
+      this.keyboard.D = false;
+      const animationDone =
+        character.deadAnimationFrame >= character.imagesDead.length - 1;
+      const fallenDone = character.y >= character.groundLevel + 300;
+      if (animationDone && fallenDone) {
+        this.isGameOver = true;
+        this.endGame();
+      }
     }
     if (
       !this.isGameWon &&
@@ -265,35 +273,26 @@ class World {
       endboss.deadAnimationFrame >= endboss.endbossDead.length - 1
     ) {
       this.isGameWon = true;
+      this.keyboard.RIGHT = false;
+      this.keyboard.LEFT = false;
+      this.keyboard.SPACE = false;
+      this.keyboard.D = false;
+      this.isGameWon = true;
+      this.endGame();
     }
   }
 
-  drawYouLostScreen() {
-    if (this.isGameOver && this.imgYouLost) {
-      this.ctx.drawImage(
-        this.imgYouLost,
-        this.canvas.width / 2 - 200,
-        this.canvas.height / 2 - 100,
-        400,
-        200,
-      );
-    }
-  }
-
-  drawYouWinScreen() {
-    if (this.isGameWon && this.imgYouWin) {
-      this.ctx.drawImage(
-        this.imgYouWin,
-        this.canvas.width / 2 - 200,
-        this.canvas.height / 2 - 100,
-        400,
-        200,
-      );
-    }
+  endGame() {
+    IntervalHub.stopAllIntervals();
+    AudioHub.stopAll();
   }
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.isGameOver || this.isGameWon) {
+      updateUI();
+      return;
+    }
     this.ctx.translate(this.camera_x, 0);
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
@@ -311,14 +310,8 @@ class World {
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
     this.ctx.translate(-this.camera_x, 0);
-
-    this.drawYouLostScreen();
-    this.drawYouWinScreen();
-
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+    updateUI();
+    requestAnimationFrame(() => this.draw());
   }
 
   addObjectsToMap(objects) {
@@ -331,6 +324,7 @@ class World {
     if ((mO instanceof Coin || mO instanceof Bottle) && mO.isCollected) {
       return;
     }
+    mO.getRealFrame();
     if (mO.otherDirection) {
       this.flipImage(mO);
     }
