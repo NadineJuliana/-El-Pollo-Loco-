@@ -39,12 +39,11 @@ class Endboss extends MovableObject {
     this.loadImages(this.endbossHurt);
     this.loadImages(this.endbossDead);
     this.x = this.spawnX;
-    this.animate();
   }
 
   animate() {
-    setInterval(() => this.updateState(), 1000 / 60);
-    setInterval(() => this.updateAnimation(), 150);
+    IntervalHub.startInterval(() => this.updateState(), 1000 / 60);
+    IntervalHub.startInterval(() => this.updateAnimation(), 150);
   }
 
   animateWalking() {
@@ -102,6 +101,7 @@ class Endboss extends MovableObject {
   }
 
   updateState() {
+    if (this.world.isGameOver) return;
     if (!this.canUpdateState()) return;
     if (!this.isDead()) {
       this.handleDetection();
@@ -236,6 +236,7 @@ class Endboss extends MovableObject {
     const now = Date.now();
     if (now - this.lastAttack < this.attackCooldown) return;
     const character = this.world.character;
+    if (this.world.isGameOver) return;
     if (this.isColliding(character)) {
       character.hit(10);
       this.world.statusbarHealth.setPercentage(character.energy);
