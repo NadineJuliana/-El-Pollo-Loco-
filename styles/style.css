@@ -10,6 +10,10 @@ body {
     background-position: center;
 }
 
+button {
+    cursor: pointer;
+}
+
 
 h1 {
     margin: 30px;
@@ -98,6 +102,47 @@ canvas {
     filter: opacity(100%);
 }
 
+.controls__overlay {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.left__overlay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 120px;
+    margin-left: 20px;
+}
+
+.right__overlay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 120px;
+    margin-right: 20px;
+}
+
+.controls__button {
+    background: rgba(255, 255, 255, 0.7);
+    filter: opacity(60%);
+    border: none;
+    border-radius: 10px;
+
+}
+
+.controls__button:hover {
+    filter: opacity(100%);
+}
+
+.controls__image {
+    width: 40px;
+    height: 40px;
+}
+
 .buttons {
     width: 350px;
     height: 40px;
@@ -147,6 +192,15 @@ dialog {
 
 }
 
+.close__button {
+    color: #A0220A;
+    background: none;
+    padding: 4px 8px 4px 8px;
+    border: none;
+    font-size: 24px;
+
+}
+
 .dialog__header {
     display: flex;
     flex-direction: column;
@@ -184,14 +238,7 @@ p {
 
 }
 
-.close__button {
-    color: #A0220A;
-    background: none;
-    padding: 4px 8px 4px 8px;
-    border: none;
-    font-size: 24px;
 
-}
 
 .endscreen {
     background-image: url('../img/7_background/layers/air.png');
