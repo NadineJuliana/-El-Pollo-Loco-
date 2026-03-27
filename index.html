@@ -56,30 +56,44 @@
           <img src="icons/004-restart.png" alt="Restart Button" />
         </button>
         <button class="ui__button" onclick="toggleSound()">
-          <img src="icons/001-volume.png" alt="Mute Button" />
+          <img id="soundImage" src="icons/001-volume.png" alt="Mute Button" />
         </button>
         <button class="ui__button" onclick="toggleScreen()">
-          <img src="icons/009-maximize.png" alt="Fullscreen Button" />
+          <img
+            id="screenImage"
+            src="icons/009-maximize.png"
+            alt="Fullscreen Button"
+          />
         </button>
         <button class="ui__button" onclick="toggleControls()">
-          <img src="icons/011-control.png" alt="Control Button" />
+          <img
+            id="controlsImage"
+            src="icons/011-control.png"
+            alt="Control Button"
+          />
         </button>
       </div>
 
       <div id="lostScreen" class="endscreen d-none">
         <img
+          class="endscreen__image"
           src="img/9_win_lost_screens/2_lost/Game Over.png"
           alt="Lose Screen"
         />
-        <button onclick="restartGame()">Restart</button>
+        <button class="restart__button" onclick="restartGame()">
+          <img src="icons/004-restart.png" alt="Restart Button" />
+        </button>
       </div>
 
       <div id="winScreen" class="endscreen d-none">
         <img
+          class="endscreen__image"
           src="img/9_win_lost_screens/1_win/You Win A.png"
           alt="Win Screen"
         />
-        <button onclick="restartGame()">Restart</button>
+        <button class="restart__button" onclick="restartGame()">
+          <img src="icons/004-restart.png" alt="Restart Button" />
+        </button>
       </div>
     </div>
     <div class="buttons">
