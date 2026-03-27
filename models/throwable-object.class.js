@@ -22,7 +22,7 @@ class ThrowableObject extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
+    IntervalHub.startInterval(() => {
       if (!this.isSplashed) {
         this.playAnimation(this.bottleRotation);
       } else {
@@ -34,7 +34,7 @@ class ThrowableObject extends MovableObject {
   throw() {
     this.speedY = 12;
     this.acceleration = 0.8;
-    this.gravityInterval = setInterval(() => {
+    IntervalHub.startInterval(() => {
       if (!this.isSplashed) {
         this.x += this.speedX;
         this.applyGravity();
@@ -50,8 +50,6 @@ class ThrowableObject extends MovableObject {
       this.y = this.groundY;
     }
     this.speedY = 0;
-    clearInterval(this.gravityInterval);
-    clearInterval(this.throwInterval);
     setTimeout(() => {
       this.markedForDeletion = true;
     }, 500);
