@@ -27,12 +27,11 @@ class Character extends MovableObject {
     this.loadImages(this.imagesJumping);
     this.loadImages(this.imagesHurt);
     this.loadImages(this.imagesDead);
-    this.animate();
   }
 
   animate() {
-    this.movementInterval = setInterval(() => this.updateMovement(), 1000 / 60);
-    this.animationInterval = setInterval(() => this.updateAnimation(), 110);
+    IntervalHub.startInterval(() => this.updateMovement(), 1000 / 60);
+    IntervalHub.startInterval(() => this.updateAnimation(), 110);
   }
 
   animateWalking() {
@@ -90,14 +89,14 @@ class Character extends MovableObject {
 
   animateDead() {
     this.initDeathAnimation();
-    const animationDone = this.playDeadAnimationFrame();
-    if (animationDone) this.deathJumpPhase();
-    if (
-      this.deadAnimationFrame >= this.imagesDead.length - 1 &&
-      this.y > this.groundLevel + 300
-    ) {
-      this.removeFromWorld();
+
+    if (this.deadAnimationFrame < this.imagesDead.length) {
+      this.setImageFromCache(this.imagesDead, this.deadAnimationFrame++);
+    } else {
+      this.setImageFromCache(this.imagesDead, this.imagesDead.length - 1);
     }
+
+    this.applyGravity();
   }
 
   moveRightIfPossible() {
@@ -127,6 +126,8 @@ class Character extends MovableObject {
   }
 
   updateMovement() {
+    if (this.isDeadAnimationPlaying) return;
+    if (this.world.isGameOver) return;
     this.lastY = this.y;
     const jumped = this.jumpIfPossible();
     const moved = this.moveRightIfPossible() || this.moveLeftIfPossible();
@@ -134,7 +135,7 @@ class Character extends MovableObject {
     if (this.isAboveGround() || this.speedY > 0) {
       this.y -= this.speedY;
       this.speedY -= this.acceleration;
-      if (this.y > 140) this.y = 140;
+      if (this.y > this.groundLevel) this.y = this.groundLevel;
     }
     this.world.camera_x = -this.x + 100;
     this.handleAllSounds();
