@@ -8,8 +8,13 @@ class MovableObject extends DrawableObject {
 
   applyGravity() {
     if (this.isAboveGround() || this.speedY > 0) {
-      this.y -= this.speedY;
-      this.speedY -= this.acceleration;
+      if (this instanceof ThrowableObject) {
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration;
+      } else {
+        this.y -= this.speedY;
+        this.speedY -= this.acceleration * 30;
+      }
     }
   }
 
