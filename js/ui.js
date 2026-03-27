@@ -30,17 +30,28 @@ function updateUI() {
   }
 }
 
+function toggleImage(elementId, condition, imageOn, imageOff) {
+  const el = document.getElementById(elementId);
+  el.src = condition ? imageOn : imageOff;
+}
+
 function backHome() {}
 
 function restartGame() {
   IntervalHub.stopAllIntervals();
   AudioHub.stopAll();
-  document.getElementById("loseScreen").classList.add("d-none");
+  document.getElementById("lostScreen").classList.add("d-none");
   document.getElementById("winScreen").classList.add("d-none");
   startGame();
 }
 
 function toggleSound() {
+  toggleImage(
+    "soundImage",
+    AudioHub.muted,
+    "../icons/001-volume.png",
+    "../icons/002-enable-sound.png",
+  );
   if (AudioHub.muted) {
     AudioHub.unmuteAll();
   } else {
