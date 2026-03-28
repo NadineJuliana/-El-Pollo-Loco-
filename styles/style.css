@@ -102,6 +102,10 @@ canvas {
     filter: opacity(100%);
 }
 
+.active {
+    filter: opacity(100%);
+}
+
 .controls__overlay {
     position: absolute;
     bottom: 10px;
