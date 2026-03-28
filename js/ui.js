@@ -1,3 +1,5 @@
+let controlsVisible = false;
+
 function openInstructions() {
   document.getElementById("instructions").showModal();
 }
@@ -61,4 +63,15 @@ function toggleSound() {
 
 function toggleScreen() {}
 
-function toggleControls() {}
+function toggleControls() {
+  const controls = document.getElementById("mobileControls");
+  const button = document.getElementById("ui__button");
+  controlsVisible = !controlsVisible;
+  if (controlsVisible) {
+    controls.classList.remove("d-none");
+    button.classList.add("active");
+  } else {
+    controls.classList.add("d-none");
+    button.classList.remove("active");
+  }
+}
