@@ -1,6 +1,7 @@
 class World {
   character = new Character();
-  level = level1;
+  // level = level1;
+  level;
   canvas;
   ctx;
   keyboard;
@@ -18,6 +19,7 @@ class World {
   throwing = false;
   isGameOver = false;
   isGameWon = false;
+  isRunning = true;
 
   imgYouLost;
   imgYouWin;
@@ -26,6 +28,7 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.level = level;
     AudioHub.playOne(AudioHub.gameStart);
     this.loadWinLoseImages();
     this.draw();
@@ -283,11 +286,13 @@ class World {
   }
 
   endGame() {
+    this.isRunning = false;
     IntervalHub.stopAllIntervals();
     AudioHub.stopAll();
   }
 
   draw() {
+    if (!this.isRunning) return;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     if (this.isGameOver || this.isGameWon) {
       updateUI();

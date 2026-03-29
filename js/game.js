@@ -8,6 +8,7 @@ function init() {
   IntervalHub.stopAllIntervals();
   AudioHub.initSounds();
   AudioHub.startBackgroundMusic();
+  initLevel();
   world = new World(canvas, keyboard);
 }
 
