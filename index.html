@@ -41,7 +41,7 @@
   <body>
     <h1>El Pollo Loco</h1>
 
-    <div class="canvas__content">
+    <div id="canvasContent" class="canvas__content">
       <div id="startscreen" class="startscreen">
         <button class="start" onclick="startGame()">
           <img src="img/10_startscreen/PlayBackground.png" alt="Start Button" />
@@ -58,14 +58,14 @@
         <button class="ui__button" onclick="toggleSound()">
           <img id="soundImage" src="icons/001-volume.png" alt="Mute Button" />
         </button>
-        <button class="ui__button" onclick="toggleScreen()">
+        <button id="screenButton" class="ui__button" onclick="toggleScreen()">
           <img
             id="screenImage"
             src="icons/009-maximize.png"
             alt="Fullscreen Button"
           />
         </button>
-        <button id="uiButton" class="ui__button" onclick="toggleControls()">
+        <button id="controlsButton" class="ui__button" onclick="toggleControls()">
           <img
             id="controlsImage"
             src="icons/011-control.png"

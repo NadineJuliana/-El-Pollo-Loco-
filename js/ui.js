@@ -61,11 +61,27 @@ function toggleSound() {
   }
 }
 
-function toggleScreen() {}
+function toggleScreen() {
+  const screen = document.getElementById("canvasContent");
+  const button = document.getElementById("screenButton");
+  if (!document.fullscreenElement) {
+    screen.requestFullscreen();
+    button.classList.add("active");
+  } else {
+    document.exitFullscreen();
+    button.classList.remove("active");
+  }
+  toggleImage(
+    "screenImage",
+    !!document.fullscreenElement,
+    "icons/009-maximize.png",
+    "icons/007-minimize-1.png",
+  );
+}
 
 function toggleControls() {
   const controls = document.getElementById("mobileControls");
-  const button = document.getElementById("uiButton");
+  const button = document.getElementById("controlsButton");
   controlsVisible = !controlsVisible;
   if (controlsVisible) {
     controls.classList.remove("d-none");
