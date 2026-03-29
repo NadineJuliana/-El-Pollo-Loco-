@@ -106,6 +106,10 @@ canvas {
     filter: opacity(100%);
 }
 
+.game__buttons {
+    filter: invert(1);
+}
+
 .controls__overlay {
     position: absolute;
     bottom: 10px;

@@ -65,7 +65,7 @@ function toggleScreen() {}
 
 function toggleControls() {
   const controls = document.getElementById("mobileControls");
-  const button = document.getElementById("ui__button");
+  const button = document.getElementById("uiButton");
   controlsVisible = !controlsVisible;
   if (controlsVisible) {
     controls.classList.remove("d-none");

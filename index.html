@@ -65,7 +65,7 @@
             alt="Fullscreen Button"
           />
         </button>
-        <button class="ui__button" onclick="toggleControls()">
+        <button id="uiButton" class="ui__button" onclick="toggleControls()">
           <img
             id="controlsImage"
             src="icons/011-control.png"
@@ -74,7 +74,7 @@
         </button>
       </div>
 
-      <div class="controls__overlay">
+      <div id="mobileControls" class="controls__overlay d-none">
         <div class="left__overlay">
           <button class="controls__button">
             <img
@@ -222,25 +222,25 @@
         <ul>
           <li>
             Turn game sound on or off:
-            <img src="icons/001-volume.png" alt="Mute Button" /> /
-            <img src="icons/002-enable-sound.png" alt="Unmute Button" />
+            <img class="game__buttons" src="icons/001-volume.png" alt="Mute Button" /> /
+            <img class="game__buttons" src="icons/002-enable-sound.png" alt="Unmute Button" />
           </li>
           <li>
             Switch or exit fullscreen mode:
-            <img src="icons/009-maximize.png" alt="Maximize Button" /> /
-            <img src="icons/007-minimize-1.png" alt="Minimize Button" />
+            <img class="game__buttons" src="icons/009-maximize.png" alt="Maximize Button" /> /
+            <img class="game__buttons" src="icons/007-minimize-1.png" alt="Minimize Button" />
           </li>
           <li>
             Restart the game:
-            <img src="icons/004-restart.png" alt="Restart Button" />
+            <img class="game__buttons" src="icons/004-restart.png" alt="Restart Button" />
           </li>
           <li>
             Toggle mobile controls:
-            <img src="icons/011-control.png" alt="Mobile Control Button" />
+            <img class="game__buttons" src="icons/011-control.png" alt="Mobile Control Button" />
           </li>
           <li>
             Return to home:
-            <img src="icons/003-home.png" alt="Home Button" />
+            <img class="game__buttons" src="icons/003-home.png" alt="Home Button" />
           </li>
         </ul>
         <h4>Tips</h4>
