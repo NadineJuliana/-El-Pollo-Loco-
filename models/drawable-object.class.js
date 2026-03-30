@@ -13,6 +13,7 @@ class DrawableObject {
   realY;
   realWidth;
   realHeight;
+  showCollisionFrames = false;
 
   getRealFrame = () => {
     this.realX = this.x + this.offset.left;
@@ -57,6 +58,7 @@ class DrawableObject {
   }
 
   drawFrame(ctx) {
+    if (!this.showCollisionFrames) return;
     if (
       this instanceof Character ||
       this instanceof Chicken ||
