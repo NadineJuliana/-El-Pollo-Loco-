@@ -11,6 +11,8 @@ class Character extends MovableObject {
   groundLevel = 140;
   bottleAmount = 0;
   coinAmount = 0;
+  deathPhase = null;
+  isDeathJump = false;
 
   imagesIdle = ImageHub.character.idle;
   imagesIdleLong = ImageHub.character.long_idle;
@@ -54,8 +56,11 @@ class Character extends MovableObject {
   animateIdle() {
     const idleDuration = Date.now() - this.lastMoveTime;
     this.isJumpingAnimationPlaying = false;
-    const images = idleDuration < 10000 ? this.imagesIdle : this.imagesIdleLong;
-    this.setImageFromCache(images, 0);
+    if (idleDuration < 10000) {
+      this.playAnimation(this.imagesIdle);
+    } else {
+      this.playAnimation(this.imagesIdleLong);
+    }
   }
 
   initDeathAnimation() {
@@ -78,25 +83,42 @@ class Character extends MovableObject {
   }
 
   deathJumpPhase() {
+    if (!this.isDeathJump) return;
     if (this.deathPhase === "up") {
       this.y -= this.speedY;
-      this.speedY -= 1;
+      this.speedY -= 7;
       if (this.speedY <= 0) this.deathPhase = "fall";
-    } else {
-      this.applyGravity();
+    } else if (this.deathPhase === "fall") {
+      this.y -= this.speedY;
+      this.speedY -= 5;
     }
   }
 
   animateDead() {
-    this.initDeathAnimation();
-
-    if (this.deadAnimationFrame < this.imagesDead.length) {
-      this.setImageFromCache(this.imagesDead, this.deadAnimationFrame++);
-    } else {
-      this.setImageFromCache(this.imagesDead, this.imagesDead.length - 1);
+    if (!this.isDeadAnimationPlaying) {
+      this.isDeadAnimationPlaying = true;
+      this.deadAnimationFrame = 0;
+      this.speedY = 25;
+      this.deathPhase = "up";
+      this.isDeathJump = true;
+      this.lastDeathFrameTime = Date.now();
     }
+    const now = Date.now();
+    if (now - this.lastDeathFrameTime > 300) {
+      if (this.deadAnimationFrame < this.imagesDead.length - 1) {
+        this.deadAnimationFrame++;
+      }
+      this.lastDeathFrameTime = now;
+    }
+    this.setImageFromCache(this.imagesDead, this.deadAnimationFrame);
+    this.deathJumpPhase();
+  }
 
-    this.applyGravity();
+  hit() {
+    super.hit();
+    if (this.isDead()) {
+      this.isDeathJump = true;
+    }
   }
 
   moveRightIfPossible() {
