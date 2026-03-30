@@ -48,7 +48,6 @@ function backHome() {
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   world = null;
-  keyboard = new Keyboard();
 }
 
 function restartGame() {
@@ -60,7 +59,6 @@ function restartGame() {
   document.getElementById("lostScreen").classList.add("d-none");
   document.getElementById("winScreen").classList.add("d-none");
   world = null;
-  keyboard = new Keyboard();
   init();
 }
 
