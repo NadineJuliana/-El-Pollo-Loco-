@@ -1,9 +1,7 @@
 class World {
   character = new Character();
-  level;
   canvas;
   ctx;
-  keyboard;
   camera_x = 0;
 
   statusbarHealth = new StatusbarHealth();
@@ -23,10 +21,9 @@ class World {
   imgYouLost;
   imgYouWin;
 
-  constructor(canvas, keyboard) {
+  constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
-    this.keyboard = keyboard;
     this.level = level;
     AudioHub.playOne(AudioHub.gameStart);
     this.loadWinLoseImages();
@@ -163,7 +160,7 @@ class World {
   }
 
   checkThrowObjects() {
-    if (this.keyboard.D && this.character.bottleAmount > 0 && !this.throwing) {
+    if (Keyboard.D && this.character.bottleAmount > 0 && !this.throwing) {
       this.throwing = true;
       const direction = this.character.otherDirection ? -1 : 1;
       let bottle = new ThrowableObject(
@@ -177,7 +174,7 @@ class World {
       this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
       this.character.registerActivity();
     }
-    if (!this.keyboard.D) {
+    if (!Keyboard.D) {
       this.throwing = false;
     }
   }
@@ -258,10 +255,10 @@ class World {
     const character = this.character;
     const endboss = this.level.enemies.find((e) => e instanceof Endboss);
     if (!this.isGameOver && character.isDead()) {
-      this.keyboard.RIGHT = false;
-      this.keyboard.LEFT = false;
-      this.keyboard.SPACE = false;
-      this.keyboard.D = false;
+      Keyboard.RIGHT = false;
+      Keyboard.LEFT = false;
+      Keyboard.SPACE = false;
+      Keyboard.D = false;
       const animationDone =
         character.deadAnimationFrame >= character.imagesDead.length - 1;
       const fallenDone = character.y >= character.groundLevel + 300;
@@ -277,10 +274,10 @@ class World {
       endboss.deadAnimationFrame >= endboss.endbossDead.length - 1
     ) {
       this.isGameWon = true;
-      this.keyboard.RIGHT = false;
-      this.keyboard.LEFT = false;
-      this.keyboard.SPACE = false;
-      this.keyboard.D = false;
+      Keyboard.RIGHT = false;
+      Keyboard.LEFT = false;
+      Keyboard.SPACE = false;
+      Keyboard.D = false;
       this.isGameWon = true;
       this.endGame();
     }

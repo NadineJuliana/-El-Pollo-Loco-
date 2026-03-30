@@ -122,7 +122,7 @@ class Character extends MovableObject {
   }
 
   moveRightIfPossible() {
-    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+    if (Keyboard.RIGHT && this.x < this.world.level.level_end_x) {
       this.moveRight();
       this.otherDirection = false;
       return true;
@@ -131,7 +131,7 @@ class Character extends MovableObject {
   }
 
   moveLeftIfPossible() {
-    if (this.world.keyboard.LEFT && this.x > 0) {
+    if (Keyboard.LEFT && this.x > 0) {
       this.moveLeft();
       this.otherDirection = true;
       return true;
@@ -140,7 +140,7 @@ class Character extends MovableObject {
   }
 
   jumpIfPossible() {
-    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+    if (Keyboard.SPACE && !this.isAboveGround()) {
       this.jump();
       return true;
     }
@@ -167,8 +167,7 @@ class Character extends MovableObject {
     if (this.isDead()) this.animateDead();
     else if (this.isHurt()) this.animateHurt();
     else if (this.isAboveGround()) this.animateJump();
-    else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT)
-      this.animateWalking();
+    else if (Keyboard.RIGHT || Keyboard.LEFT) this.animateWalking();
     else this.animateIdle();
   }
 
@@ -188,7 +187,7 @@ class Character extends MovableObject {
 
   handleRunSound() {
     const isRunning =
-      (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) &&
+      (Keyboard.RIGHT || Keyboard.LEFT) &&
       !this.isAboveGround() &&
       !this.isDead() &&
       !this.isHurt();
@@ -238,9 +237,9 @@ class Character extends MovableObject {
   handleIdleSound() {
     const idleDuration = Date.now() - this.lastMoveTime;
     const isIdle =
-      !this.world.keyboard.RIGHT &&
-      !this.world.keyboard.LEFT &&
-      !this.world.keyboard.D &&
+      !Keyboard.RIGHT &&
+      !Keyboard.LEFT &&
+      !Keyboard.D &&
       !this.isAboveGround() &&
       !this.isDead() &&
       !this.isHurt() &&
