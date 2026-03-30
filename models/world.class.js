@@ -1,6 +1,5 @@
 class World {
   character = new Character();
-  // level = level1;
   level;
   canvas;
   ctx;
@@ -142,6 +141,8 @@ class World {
   checkEnemyCollisions() {
     for (const enemy of this.level.enemies) {
       if (!this.character.isColliding(enemy)) continue;
+      if (this.character.isDeadAnimationPlaying && this.character.isDeathJump)
+        continue;
       if (enemy instanceof Chicken || enemy instanceof Chick) {
         const stomped = this.checkStomp(enemy);
         if (!stomped) this.checkSideOrBottomHit(enemy);
