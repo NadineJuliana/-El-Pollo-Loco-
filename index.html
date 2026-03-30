@@ -65,7 +65,11 @@
             alt="Fullscreen Button"
           />
         </button>
-        <button id="controlsButton" class="ui__button" onclick="toggleControls()">
+        <button
+          id="controlsButton"
+          class="ui__button"
+          onclick="toggleControls()"
+        >
           <img
             id="controlsImage"
             src="icons/011-control.png"
@@ -76,14 +80,14 @@
 
       <div id="mobileControls" class="controls__overlay d-none">
         <div class="left__overlay">
-          <button class="controls__button">
+          <button id="btnLeft" class="controls__button">
             <img
               class="controls__image"
               src="icons/001-left-arrow.png"
               alt="Arrow Left"
             />
           </button>
-          <button class="controls__button">
+          <button id="btnRight" class="controls__button">
             <img
               class="controls__image"
               src="icons/003-right-arrow.png"
@@ -92,14 +96,14 @@
           </button>
         </div>
         <div class="right__overlay">
-          <button class="controls__button">
+          <button id="btnJump" class="controls__button">
             <img
               class="controls__image"
               src="icons/002-up-arrow.png"
               alt="Arrow Up"
             />
           </button>
-          <button class="controls__button">
+          <button id="btnThrow" class="controls__button">
             <img
               class="controls__image"
               src="img/4_salsa_bottle/salsa_bottle.png"
@@ -222,25 +226,55 @@
         <ul>
           <li>
             Turn game sound on or off:
-            <img class="game__buttons" src="icons/001-volume.png" alt="Mute Button" /> /
-            <img class="game__buttons" src="icons/002-enable-sound.png" alt="Unmute Button" />
+            <img
+              class="game__buttons"
+              src="icons/001-volume.png"
+              alt="Mute Button"
+            />
+            /
+            <img
+              class="game__buttons"
+              src="icons/002-enable-sound.png"
+              alt="Unmute Button"
+            />
           </li>
           <li>
             Switch or exit fullscreen mode:
-            <img class="game__buttons" src="icons/009-maximize.png" alt="Maximize Button" /> /
-            <img class="game__buttons" src="icons/007-minimize-1.png" alt="Minimize Button" />
+            <img
+              class="game__buttons"
+              src="icons/009-maximize.png"
+              alt="Maximize Button"
+            />
+            /
+            <img
+              class="game__buttons"
+              src="icons/007-minimize-1.png"
+              alt="Minimize Button"
+            />
           </li>
           <li>
             Restart the game:
-            <img class="game__buttons" src="icons/004-restart.png" alt="Restart Button" />
+            <img
+              class="game__buttons"
+              src="icons/004-restart.png"
+              alt="Restart Button"
+            />
           </li>
           <li>
             Toggle mobile controls:
-            <img class="game__buttons" src="icons/011-control.png" alt="Mobile Control Button" />
+            <img
+              class="game__buttons"
+              src="icons/011-control.png"
+              alt="Mobile Control Button"
+            />
           </li>
           <li>
             Return to home:
-            <img class="game__buttons" src="icons/003-home.png" alt="Home Button" />
+            <img
+              class="game__buttons"
+              src="icons/003-home.png"
+              alt="Home Button"
+            />
           </li>
         </ul>
         <h4>Tips</h4>
