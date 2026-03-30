@@ -37,7 +37,19 @@ function toggleImage(elementId, condition, imageOn, imageOff) {
   el.src = condition ? imageOn : imageOff;
 }
 
-function backHome() {}
+function backHome() {
+  IntervalHub.stopAllIntervals();
+  AudioHub.stopAll();
+  document.getElementById("startscreen").style.display = "block";
+  document.getElementById("canvas").style.display = "none";
+  document.getElementById("lostScreen").classList.add("d-none");
+  document.getElementById("winScreen").classList.add("d-none");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  world = null;
+  keyboard = new Keyboard();
+}
 
 function restartGame() {
   IntervalHub.stopAllIntervals();
