@@ -79,10 +79,21 @@ class AudioHub {
   static muteAll() {
     AudioHub.muted = true;
     AudioHub.allSounds.forEach((sound) => (sound.muted = true));
+    localStorage.setItem("gameMuted", "true");
   }
 
   static unmuteAll() {
     AudioHub.muted = false;
     AudioHub.allSounds.forEach((sound) => (sound.muted = false));
+    localStorage.setItem("gameMuted", "false");
+    if (AudioHub.backgroundMusic.paused) {
+      AudioHub.startBackgroundMusic();
+    }
+  }
+
+  static loadMuteStatus() {
+    const savedMuted = localStorage.getItem("gameMuted");
+    AudioHub.muted = savedMuted === "true" ? true : false;
+    AudioHub.allSounds.forEach((sound) => (sound.muted = AudioHub.muted));
   }
 }
