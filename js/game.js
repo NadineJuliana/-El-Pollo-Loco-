@@ -7,6 +7,7 @@ function init() {
   canvas = document.getElementById("canvas");
   IntervalHub.stopAllIntervals();
   AudioHub.initSounds();
+  AudioHub.loadMuteStatus();
   AudioHub.startBackgroundMusic();
   initLevel();
   Keyboard.setControls();
@@ -51,4 +52,14 @@ window.addEventListener("resize", () => {
     controlsVisible = false;
     applyControlsState();
   }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  AudioHub.loadMuteStatus();
+  toggleImage(
+    "soundImage",
+    !AudioHub.muted,
+    "../icons/001-volume.png",
+    "../icons/002-enable-sound.png",
+  );
 });
