@@ -18,15 +18,11 @@ class World {
   isGameWon = false;
   isRunning = true;
 
-  imgYouLost;
-  imgYouWin;
-
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.level = level;
     AudioHub.playOne(AudioHub.gameStart);
-    this.loadWinLoseImages();
     this.draw();
     this.setWorld();
     this.run();
@@ -59,14 +55,6 @@ class World {
       this.checkEndbossState();
       this.checkGameOver();
     }, 1000 / 60);
-  }
-
-  loadWinLoseImages() {
-    this.imgYouLost = new Image();
-    this.imgYouLost.src = "img/9_win_lost_screens/2_lost/Game Over.png";
-
-    this.imgYouWin = new Image();
-    this.imgYouWin.src = "img/9_win_lost_screens/1_win/You Win A.png";
   }
 
   checkStomp(enemy) {
