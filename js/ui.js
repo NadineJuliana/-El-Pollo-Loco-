@@ -63,17 +63,17 @@ function restartGame() {
 }
 
 function toggleSound() {
-  toggleImage(
-    "soundImage",
-    AudioHub.muted,
-    "../icons/001-volume.png",
-    "../icons/002-enable-sound.png",
-  );
   if (AudioHub.muted) {
     AudioHub.unmuteAll();
   } else {
     AudioHub.muteAll();
   }
+  toggleImage(
+    "soundImage",
+    !AudioHub.muted,
+    "../icons/001-volume.png",
+    "../icons/002-enable-sound.png",
+  );
 }
 
 function toggleScreen() {
