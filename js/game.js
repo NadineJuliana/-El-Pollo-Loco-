@@ -1,6 +1,7 @@
 let canvas;
 let world;
 let audioStarted = false;
+let isTouch = false;
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -18,7 +19,7 @@ function startGame() {
   AudioHub.startBackgroundMusic();
   init();
   startUIUpdater();
-  Keyboard.setMobileControls();
+  initControls();
 }
 
 function startUIUpdater() {
@@ -26,3 +27,28 @@ function startUIUpdater() {
     updateUI();
   }, 100);
 }
+
+function isTouchDevice() {
+  return "ontouchstart" in window || navigator.maxTouchPoints > 0;
+}
+
+function initControls() {
+  const button = document.getElementById("controlsButton");
+  isTouch = isTouchDevice();
+  if (isTouch) {
+    controlsVisible = true;
+    Keyboard.setMobileControls();
+    button.classList.remove("d-none");
+  } else {
+    controlsVisible = false;
+    button.classList.add("d-none");
+  }
+  applyControlsState();
+}
+
+window.addEventListener("resize", () => {
+  if (!isTouch) {
+    controlsVisible = false;
+    applyControlsState();
+  }
+});
