@@ -95,9 +95,14 @@ function toggleScreen() {
 }
 
 function toggleControls() {
+  if (!isTouch) return;
+  controlsVisible = !controlsVisible;
+  applyControlsState();
+}
+
+function applyControlsState() {
   const controls = document.getElementById("mobileControls");
   const button = document.getElementById("controlsButton");
-  controlsVisible = !controlsVisible;
   if (controlsVisible) {
     controls.classList.remove("d-none");
     button.classList.add("active");
