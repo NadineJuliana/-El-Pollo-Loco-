@@ -21,6 +21,7 @@ function startGame() {
   init();
   startUIUpdater();
   initControls();
+  disableContextMenu();
 }
 
 function startUIUpdater() {
@@ -45,6 +46,15 @@ function initControls() {
     button.classList.add("d-none");
   }
   applyControlsState();
+}
+
+function disableContextMenu() {
+  const mobileButtons = document.querySelectorAll("#mobileControls button");
+  mobileButtons.forEach((btn) => {
+    btn.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
+  });
 }
 
 window.addEventListener("resize", () => {
