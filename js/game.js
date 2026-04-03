@@ -2,6 +2,7 @@ let canvas;
 let world;
 let audioStarted = false;
 let isTouch = false;
+let hasValidOrientation = false;
 
 function init() {
   canvas = document.getElementById("canvas");
@@ -15,6 +16,8 @@ function init() {
 }
 
 function startGame() {
+  hasValidOrientation = false;
+  checkOrientation();
   document.getElementById("startscreen").style.display = "none";
   document.getElementById("canvas").style.display = "block";
   AudioHub.startBackgroundMusic();
@@ -56,6 +59,24 @@ function disableContextMenu() {
     });
   });
 }
+
+function checkOrientation() {
+  const overlay = document.getElementById("rotateOverlay");
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const isTouch = window.matchMedia("(hover: none)").matches;
+  if (!isPortrait) {
+    hasValidOrientation = true;
+  }
+  if (isTouch && isPortrait && !hasValidOrientation) {
+    overlay.classList.remove("d-none");
+  } else {
+    overlay.classList.add("d-none");
+  }
+}
+
+window.addEventListener("load", checkOrientation);
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
 
 window.addEventListener("resize", () => {
   if (!isTouch) {
