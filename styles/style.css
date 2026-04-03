@@ -108,12 +108,14 @@ canvas {
     filter: invert(1);
 }
 
-.ui__button:hover {
+.ui__button.active {
     filter: opacity(100%);
 }
 
-.active {
-    filter: opacity(100%);
+@media (hover: hover) {
+    .ui__button:hover {
+        filter: opacity(100%);
+    }
 }
 
 .game__buttons {
@@ -163,12 +165,13 @@ canvas {
 
 .buttons {
     width: 350px;
-    height: 40px;
-    padding: 16px;
+    height: 80px;
+    /* padding: 16px; */
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
+    justify-content: center;
+    align-items: flex-end;
     margin: 16px;
+    gap: 8px;
 }
 
 .button__dialog {
@@ -176,12 +179,16 @@ canvas {
     width: 120px;
     height: 40px;
     background-color: #A0220A;
-    color: rgb(188, 190, 192);
-    border: 1px solid #A0220A;
+    /* color: rgb(188, 190, 192); */
+    /* border: 1px solid #A0220A; */
     border-radius: 10px;
     font-weight: bold;
-    margin: 20px 0;
-    padding: 8px;
+    /* margin: 20px 0; */
+    /* padding: 8px; */
+
+    border: none;
+    /* background: none; */
+    color: rgb(227, 236, 236);
 }
 
 .button__dialog:hover {
@@ -240,7 +247,6 @@ dialog {
     height: 48px;
 }
 
-
 li {
     width: 100%;
     display: flex;
@@ -255,8 +261,6 @@ p {
     /* color: rgb( 0,93,49); */
 
 }
-
-
 
 .endscreen {
     background-image: url('../img/7_background/layers/air.png');
@@ -281,16 +285,67 @@ p {
     height: 400px;
 }
 
+.endscreen__buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 24px 0 0 0;
+    width: 60px;
+}
+
 .restart__button {
     background: none;
     border: none;
-    padding: 24px 0 0 0;
+
+}
+
+.home__button {
+    background: none;
+    border: none;
+
 }
 
 .restart__button img {
     filter: invert(0.5) sepia(1) saturate(200%) hue-rotate(150deg);
+    width: 20px;
+    height: 20px;
 }
 
+.home__button img {
+    filter: invert(0.5) sepia(1) saturate(200%) hue-rotate(150deg);
+    width: 24px;
+    height: 24px;
+}
+
+
 .d-none {
+    display: none;
+}
+
+.rotate__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100dvw;
+    height: 100dvh;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(5px);
+    color: white;
+    font-size: 32px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    text-align: center;
+    padding: 20px;
+}
+
+.rotate__overlay p {
+    font-family: 'Sancreek';
+    line-height: 1.5;
+}
+
+
+.rotate__overlay.d-none {
     display: none;
 }
