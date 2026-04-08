@@ -15,7 +15,7 @@ function initLevel() {
       new Chick(),
       new Endboss(),
     ],
-    [new Cloud(), new Cloud(), new Cloud()],
+    [new Cloud(), new Cloud(), new Cloud(), new Cloud(), new Cloud()],
     [
       new BackgroundObject("img/7_background/layers/air.png", -719),
       new BackgroundObject("img/7_background/layers/3_third_layer/2.png", -719),
