@@ -1,11 +1,11 @@
 let controlsVisible = false;
 
 function openInstructions() {
-  document.getElementById("instructions").showModal();
+  document.getElementById("instructions").show();
 }
 
 function openImprint() {
-  document.getElementById("imprint").showModal();
+  document.getElementById("imprint").show();
 }
 
 function closeInstructions() {
@@ -92,6 +92,7 @@ function toggleScreen() {
     "icons/009-maximize.png",
     "icons/007-minimize-1.png",
   );
+  setTimeout(scaleCanvasContent, 100);
 }
 
 function toggleControls() {
@@ -111,3 +112,20 @@ function applyControlsState() {
     button.classList.remove("active");
   }
 }
+
+function scaleCanvasContent() {
+  const container = document.getElementById("canvasContent");
+  const baseWidth = 720;
+  const baseHeight = 480;
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  let scale = Math.min(windowWidth / baseWidth, windowHeight / baseHeight, 1);
+  if (windowWidth > windowHeight && windowHeight < 768) {
+    scale *= 0.9;
+  }
+  container.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+
+window.addEventListener("resize", scaleCanvasContent);
+window.addEventListener("load", scaleCanvasContent);
+window.addEventListener("orientationchange", scaleCanvasContent);
