@@ -71,6 +71,7 @@ function checkOrientation() {
     overlay.classList.remove("d-none");
   } else {
     overlay.classList.add("d-none");
+    scaleCanvasContent();
   }
 }
 
