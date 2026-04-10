@@ -1,13 +1,21 @@
 body {
     display: flex;
     flex-direction: column;
-    /* align-items: center;
-    justify-content: center; */
     min-height: 100dvh;
     background-image: url('../img/10_startscreen/first_half_background.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 button {
@@ -37,14 +45,14 @@ h4 {
 }
 
 .canvas__content {
-    /* position: relative; */
     position: absolute;
     top: 50%;
     left: 50%;
     width: 720px;
     height: 480px;
     z-index: 0;
-    transform-origin: top left;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
     margin: 0 auto;
 }
 
@@ -166,9 +174,6 @@ canvas {
 }
 
 .buttons {
-    position: absolute;
-    /* bottom: 10%;
-    left: 50%; */
     transform-origin: bottom left;
     width: 350px;
     padding: 16px;
