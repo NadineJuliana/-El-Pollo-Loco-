@@ -60,26 +60,68 @@ function disableContextMenu() {
   });
 }
 
-function checkOrientation() {
-  const overlay = document.getElementById("rotateOverlay");
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const isTouch = window.matchMedia("(hover: none)").matches;
-  if (!isPortrait) {
-    hasValidOrientation = true;
-  }
-  if (isTouch && isPortrait && !hasValidOrientation) {
-    overlay.classList.remove("d-none");
+function isDevToolsMobileView() {
+  return (
+    window.innerWidth < 768 &&
+    !isTouch &&
+    window.outerWidth - window.innerWidth > 100
+  );
+}
+
+function showOverlay() {
+  document.getElementById("rotateOverlay").classList.remove("d-none");
+}
+
+function hideOverlay() {
+  document.getElementById("rotateOverlay").classList.add("d-none");
+  scaleCanvasContent();
+}
+
+function isPortraitMode() {
+  return window.innerHeight > window.innerWidth;
+}
+
+function isBelowMinWidth() {
+  return window.innerWidth < 320;
+}
+
+function handleMobileOrientation() {
+  if (isPortraitMode()) {
+    showOverlay();
   } else {
-    overlay.classList.add("d-none");
-    scaleCanvasContent();
+    hideOverlay();
   }
 }
 
-window.addEventListener("load", checkOrientation);
-window.addEventListener("resize", checkOrientation);
+function handleDesktopView() {
+  if (isDevToolsMobileView()) {
+    showOverlay();
+  } else {
+    hideOverlay();
+  }
+}
+
+function checkOrientation() {
+  if (isBelowMinWidth()) {
+    showOverlay();
+    return;
+  }
+  if (isTouch) {
+    handleMobileOrientation();
+    return;
+  }
+  handleDesktopView();
+}
+
+window.addEventListener("load", () => {
+  isTouch = isTouchDevice();
+  checkOrientation();
+});
+
 window.addEventListener("orientationchange", checkOrientation);
 
 window.addEventListener("resize", () => {
+  checkOrientation();
   if (!isTouch) {
     controlsVisible = false;
     applyControlsState();
