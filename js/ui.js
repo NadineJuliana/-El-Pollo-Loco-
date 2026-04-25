@@ -1,11 +1,28 @@
 let controlsVisible = false;
 
+function openDialog(id) {
+  const dialog = document.getElementById(id);
+  if (dialog.open) dialog.close();
+  const isTouchDeviceNow = isTouchDevice();
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const useModal = isTouchDeviceNow && isPortrait;
+  if (useModal) {
+    dialog.classList.remove("in-canvas");
+    dialog.classList.add("out-canvas");
+    dialog.show();
+  } else {
+    dialog.classList.remove("out-canvas");
+    dialog.classList.add("in-canvas");
+    dialog.show();
+  }
+}
+
 function openInstructions() {
-  document.getElementById("instructions").show();
+  openDialog("instructions");
 }
 
 function openImprint() {
-  document.getElementById("imprint").show();
+  openDialog("imprint");
 }
 
 function closeInstructions() {
@@ -18,13 +35,11 @@ function closeImprint() {
 
 function updateUI() {
   if (!world) return;
-
   if (world.isGameOver) {
     document.getElementById("lostScreen").classList.remove("d-none");
   } else {
     document.getElementById("lostScreen").classList.add("d-none");
   }
-
   if (world.isGameWon) {
     document.getElementById("winScreen").classList.remove("d-none");
   } else {
