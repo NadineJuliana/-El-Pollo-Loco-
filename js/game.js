@@ -58,14 +58,6 @@ function disableContextMenu() {
   });
 }
 
-function isDevToolsMobileView() {
-  return (
-    window.innerWidth < 768 &&
-    !isTouch &&
-    window.outerWidth - window.innerWidth > 100
-  );
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   AudioHub.loadMuteStatus();
   toggleImage(
@@ -76,34 +68,40 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 });
 
-function showAll() {
+function showDesktop() {
   setDisplay(true, true, true, false);
 }
 
-function showPortraitOnly() {
+function showMobilePortrait() {
   setDisplay(false, false, false, true);
 }
 
-function showLandscapeTouch() {
+function showMobileLandscape() {
   setDisplay(true, false, false, false);
 }
 
 function setDisplay(canvas, header, footer, portrait) {
-  document.getElementById("canvasContent").style.display = canvas ? "block" : "none";
+  document.getElementById("canvasContent").style.display = canvas
+    ? "block"
+    : "none";
   document.querySelector("header").style.display = header ? "block" : "none";
   document.querySelector("footer").style.display = footer ? "block" : "none";
   const portraitScreen = document.getElementById("portraitScreen");
   portraitScreen.classList.toggle("d-none", !portrait);
 }
 
-function updateLayout() {
-  const isPortrait = window.innerHeight > window.innerWidth;
-  const isTouchDeviceNow = isTouchDevice();
-  if (!isTouchDeviceNow) return showAll();
-  if (isPortrait) return showPortraitOnly();
-  showLandscapeTouch();
+function isMobileLayout() {
+  return window.matchMedia("(max-width: 768px)").matches;
 }
 
-window.addEventListener("load", updateLayout);
+function updateLayout() {
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const isMobile = isMobileLayout();
+  if (!isMobile) return showDesktop();
+  if (isPortrait) return showMobilePortrait();
+  showMobileLandscape();
+}
+
+document.addEventListener("DOMContentLoaded", updateLayout);
 window.addEventListener("resize", updateLayout);
 window.addEventListener("orientationchange", updateLayout);
