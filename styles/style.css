@@ -1,6 +1,5 @@
 body {
-    display: flex;
-    flex-direction: column;
+    height: 100dvh;
     min-height: 100dvh;
     background-image: url('../img/10_startscreen/first_half_background.png');
     background-size: cover;
@@ -9,14 +8,44 @@ body {
     margin: 0;
 }
 
-footer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+main {
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: calc(100dvh - 170px);
+}
+
+.portrait__screen {
+    position: fixed;
+    inset: 0;
+    background-image: url('../img/10_startscreen/Rotate.png');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+    z-index: 50;
+    height: 100dvh;
+    width: 100dvw;
+}
+
+.portraitScreen__content{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+header {
+    width: 100%;
+    text-align: center;
+    height: 120px;
+}
+
+footer {
+    width: 100%;
+    height: 50px;
 }
 
 button {
@@ -24,13 +53,13 @@ button {
 }
 
 h1 {
-    margin: 30px;
+    padding: 30px;
     font-size: 40px;
     color: rgb(227, 236, 236);
-    text-align: center;
 }
 
 h2 {
+    color: #A0220A;
     font-size: 32px;
     padding: 16px;
 }
@@ -45,6 +74,11 @@ h4 {
     padding: 20px;
 }
 
+a {
+    text-decoration: none;
+    color: #A0220A;
+}
+
 .canvas__content {
     position: absolute;
     top: 50%;
@@ -57,12 +91,9 @@ h4 {
     margin: 0 auto;
 }
 
-
-
 canvas,
 .startscreen,
-.endscreen,
-dialog {
+.endscreen {
     position: absolute;
     top: 0;
     left: 0;
@@ -98,11 +129,11 @@ dialog {
 .canvas__content:fullscreen canvas {
     width: 100%;
     height: 100%;
+    border-radius: 0px;
 }
 
 canvas {
     background-color: black;
- 
 }
 
 .ui__overlay {
@@ -124,12 +155,6 @@ canvas {
 
 .ui__button.active {
     filter: opacity(100%);
-}
-
-@media (hover: hover) {
-    .ui__button:hover {
-        filter: opacity(100%);
-    }
 }
 
 .game__buttons {
@@ -178,46 +203,62 @@ canvas {
 }
 
 .buttons {
-    transform-origin: bottom left;
-    width: 350px;
-    padding: 16px;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin: 16px;
     gap: 8px;
 }
 
 .button__dialog {
     font-size: 16px;
     padding: 8px;
-    /* width: 120px;
-    height: 40px; */
-    /* background-color: rgb(241,156,78); */
     background: none;
-    /* border-radius: 10px; */
     font-weight: bold;
     border: none;
-    color: rgb(227, 236, 236);
-}
-
-.button__dialog:hover {
-    /* background-color: rgb(199, 103, 88); */
-    /* color: rgb(230, 231, 232); */
-    /* color: rgb(199, 103, 88); */
     color: #A0220A;
 }
 
+.button__dialog:hover {
+    color: rgb(227, 236, 236);
+}
+
 dialog {
-    z-index: 1;
     overflow: auto;
     border: none;
     background-image: url('../img/7_background/layers/air.png');
     background-position: center;
+    background-size: cover;
     scrollbar-width: none;
     color: #A0220A;
-
 }
+
+
+dialog.out-canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
+}
+
+dialog.in-canvas {
+    z-index: 5;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 720px;
+    height: 480px;
+    transform-origin: center center;
+    transform: translate(-50%, -50%);
+}
+
+dialog:not(.in-canvas) {
+    z-index: 9999;
+}
+
 
 .close__button {
     color: #A0220A;
@@ -340,4 +381,33 @@ p {
 
 .rotate__overlay.d-none {
     display: none;
+}
+
+@media (hover: hover) {
+    .ui__button:hover {
+        filter: opacity(100%);
+    }
+}
+
+@media (max-width: 768px) {
+  header, footer {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+    li {
+        gap: 8px;
+        padding: 8px 0;
+    }
+
+    .game__buttons {
+        width: 20px;
+        height: 20px;
+    }
+
+    .img__dialog {
+        height: 40px;
+        width: 40px;
+    }
 }
