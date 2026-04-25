@@ -43,6 +43,18 @@
       <h1>El Pollo Loco</h1>
     </header>
 
+    <div id="portraitScreen" class="portrait__screen d-none">
+      <div class="portraitScreen__content">
+      <h2>El Pollo Loco</h2>
+      <div class="buttons">
+        <button class="button__dialog" onclick="openInstructions()">
+          Instructions
+        </button>
+        <button class="button__dialog" onclick="openImprint()">Imprint</button>
+      </div>
+      </div>
+    </div>
+
     <main>
       <div id="canvasContent" class="canvas__content">
         <div id="startscreen" class="startscreen">
@@ -151,7 +163,9 @@
           </div>
         </div>
 
-        <dialog id="instructions" class="instructions__dialog">
+       
+      </div>
+       <dialog id="instructions" class="instructions__dialog">
           <button class="close__button" onclick="closeInstructions()">X</button>
           <div class="dialog__header">
             <h2>Instructions</h2>
@@ -292,7 +306,7 @@
             <p>Use jump and attack wisely</p>
             <p>Explore the level to find the best path</p>
 
-            <p>Good luck and have fun playing!</p>
+            <p>Good luck and have fun!</p>
           </div>
         </dialog>
 
@@ -342,7 +356,6 @@
             </p>
           </div>
         </dialog>
-      </div>
     </main>
 
     <footer>
@@ -353,8 +366,5 @@
         <button class="button__dialog" onclick="openImprint()">Imprint</button>
       </div>
     </footer>
-    <div id="rotateOverlay" class="rotate__overlay d-none">
-      <p>Please rotate your device!</p>
-    </div>
   </body>
 </html>
