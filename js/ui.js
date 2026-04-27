@@ -53,6 +53,9 @@ function toggleImage(elementId, condition, imageOn, imageOff) {
 }
 
 function backHome() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
   IntervalHub.stopAllIntervals();
   AudioHub.stopAll();
   document.getElementById("startscreen").style.display = "block";
@@ -63,6 +66,7 @@ function backHome() {
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   world = null;
+  updateFullscreenUI(false);
 }
 
 function restartGame() {
@@ -91,23 +95,31 @@ function toggleSound() {
   );
 }
 
-function toggleScreen() {
-  const screen = document.getElementById("canvasContent");
+function updateFullscreenUI(isFullscreen) {
   const button = document.getElementById("screenButton");
-  if (!document.fullscreenElement) {
-    screen.requestFullscreen();
+  if (isFullscreen) {
     button.classList.add("active");
   } else {
-    document.exitFullscreen();
     button.classList.remove("active");
   }
   toggleImage(
     "screenImage",
-    !!document.fullscreenElement,
-    "icons/009-maximize.png",
+    isFullscreen,
     "icons/007-minimize-1.png",
+    "icons/009-maximize.png",
   );
-  setTimeout(scaleCanvasContent, 100);
+}
+
+function toggleScreen() {
+  const screen = document.getElementById("canvasContent");
+  if (!document.fullscreenElement) {
+    screen.requestFullscreen();
+    updateFullscreenUI(true);
+  } else {
+    document.exitFullscreen();
+    updateFullscreenUI(false);
+  }
+  requestAnimationFrame(() => scaleCanvasContent());
 }
 
 function toggleControls() {
@@ -130,6 +142,10 @@ function applyControlsState() {
 
 function scaleCanvasContent() {
   const container = document.getElementById("canvasContent");
+  if (document.fullscreenElement) {
+    container.style.transform = "none";
+    return;
+  }
   const baseWidth = 720;
   const baseHeight = 480;
   const windowWidth = window.innerWidth;
@@ -140,6 +156,12 @@ function scaleCanvasContent() {
   }
   container.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
+
+document.addEventListener("fullscreenchange", () => {
+  const isFullscreen = !!document.fullscreenElement;
+  updateFullscreenUI(isFullscreen);
+  requestAnimationFrame(() => scaleCanvasContent());
+});
 
 window.addEventListener("resize", scaleCanvasContent);
 window.addEventListener("load", scaleCanvasContent);
