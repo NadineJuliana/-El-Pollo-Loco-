@@ -5,6 +5,7 @@ class Endboss extends MovableObject {
   offset = { top: 90, right: 40, bottom: 40, left: 40 };
   energy = 100;
   speed = 0.4;
+  damage = 20;
   isDeadAnimationPlaying = false;
   deadAnimationFrame = 0;
   attackCooldown = 1000;

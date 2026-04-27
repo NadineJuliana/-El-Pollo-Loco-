@@ -5,6 +5,7 @@ class MovableObject extends DrawableObject {
   acceleration = 0.7;
   energy = 100;
   lastHit = 0;
+  isDeadAnimationPlaying = false;
 
   applyGravity() {
     if (this.isAboveGround() || this.speedY > 0) {
@@ -28,10 +29,9 @@ class MovableObject extends DrawableObject {
     return this.y < this.groundLevel;
   }
 
-  hit(damage = 5) {
+  hit(damage = 10) {
     const now = Date.now();
     if (now - this.lastHit < 1000) return;
-
     this.energy -= damage;
     if (this.energy < 0) this.energy = 0;
     this.lastHit = now;
@@ -62,6 +62,5 @@ class MovableObject extends DrawableObject {
   setImageFromCache(images, index) {
     const path = images[index];
     if (this.imageCache[path]) this.img = this.imageCache[path];
-    // else console.warn('Image not loaded:', path);
   }
 }
