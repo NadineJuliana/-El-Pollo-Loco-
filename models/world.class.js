@@ -3,20 +3,17 @@ class World {
   canvas;
   ctx;
   camera_x = 0;
-
   statusbarHealth = new StatusbarHealth();
   statusbarCoin = new StatusbarCoin();
   statusbarBottle = new StatusbarBottle();
   statusbarEndboss = new StatusbarEndboss();
-
   throwableObjects = [];
-  coins = [];
-  bottles = [];
-
   throwing = false;
   isGameOver = false;
   isGameWon = false;
   isRunning = true;
+  maxCoins = 20;
+  maxBottles = 20;
 
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
@@ -54,7 +51,21 @@ class World {
       this.checkEndbossDistance();
       this.checkEndbossState();
       this.checkGameOver();
+      this.updateStatusbars();
     }, 1000 / 60);
+  }
+
+  updateStatusbars() {
+    const coinPercent = Math.round(
+      (this.character.coinAmount / this.maxCoins) * 100,
+    );
+    const bottlePercent = Math.round(
+      (this.character.bottleAmount / this.maxBottles) * 100,
+    );
+    this.statusbarCoin.setPercentage(Math.min(100, Math.max(0, coinPercent)));
+    this.statusbarBottle.setPercentage(
+      Math.min(100, Math.max(0, bottlePercent)),
+    );
   }
 
   checkStomp(enemy) {
@@ -159,7 +170,6 @@ class World {
       bottle.speedX = 6 * direction;
       this.throwableObjects.push(bottle);
       this.character.bottleAmount--;
-      this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
       this.character.registerActivity();
     }
     if (!Keyboard.D) {
@@ -241,7 +251,8 @@ class World {
         coin.isCollected = true;
         AudioHub.playOne(AudioHub.coinCollect);
         this.character.collectCoin();
-        this.statusbarCoin.setPercentage(this.character.coinAmount * 10);
+        const maxCoins = this.level.coins.length;
+        const percent = (this.character.coinAmount / maxCoins) * 100;
       }
     });
   }
@@ -252,7 +263,8 @@ class World {
         bottle.isCollected = true;
         AudioHub.playOne(AudioHub.bottleCollect);
         this.character.collectBottle();
-        this.statusbarBottle.setPercentage(this.character.bottleAmount * 10);
+        const maxBottles = this.level.bottles.length;
+        const percent = (this.character.bottleAmount / maxBottles) * 100;
       }
     });
   }
