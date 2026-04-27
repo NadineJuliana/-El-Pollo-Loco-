@@ -2,18 +2,15 @@ class Endboss extends MovableObject {
   height = 400;
   width = 250;
   y = 60;
-
   offset = { top: 90, right: 40, bottom: 40, left: 40 };
   energy = 100;
-
   speed = 0.4;
-
   isDeadAnimationPlaying = false;
   deadAnimationFrame = 0;
   attackCooldown = 1000;
   lastAttack = 0;
   state = "idle";
-  spawnX = 2800;
+  spawnX = 4900;
   alertPlayed = false;
   lastTimeSeen = 0;
   world;

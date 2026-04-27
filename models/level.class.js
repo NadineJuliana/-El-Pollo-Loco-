@@ -3,7 +3,7 @@ class Level {
   clouds;
   backgroundObjects;
   coins;
-  level_end_x = 2950;
+  level_end_x = 5000;
 
   constructor(enemies, clouds, backgroundObjects, coins, bottles) {
     this.enemies = enemies;
@@ -12,9 +12,9 @@ class Level {
     this.coins = coins;
     this.bottles = bottles;
     this.placeObjectTypes([
-      { objects: this.coins, xMin: 300, xMax: 2200, yMin: 100, yMax: 200 },
-      { objects: this.bottles, xMin: 250, xMax: 2500, yMin: 360, yMax: 360 },
-      { objects: this.clouds, xMin: 0, xMax: 2500, yMin: 20, yMax: 30 },
+      { objects: this.coins, xMin: 300, xMax: 4500, yMin: 100, yMax: 200 },
+      { objects: this.bottles, xMin: 250, xMax: 4500, yMin: 360, yMax: 360 },
+      { objects: this.clouds, xMin: 0, xMax: 4500, yMin: 20, yMax: 30 },
     ]);
   }
 
@@ -30,7 +30,6 @@ class Level {
     objects.forEach((object) => {
       let placedSuccessfully = false;
       let attempts = 0;
-
       while (!placedSuccessfully && attempts < 100) {
         object.x = xMin + Math.random() * (xMax - xMin);
         object.y = yMin + Math.random() * (yMax - yMin);
