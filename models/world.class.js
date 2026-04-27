@@ -169,29 +169,67 @@ class World {
 
   checkThrowableCollisions() {
     this.throwableObjects.forEach((bottle) => {
-      if (
-        bottle.y >= bottle.groundY &&
-        bottle.speedY <= 0 &&
-        !bottle.isSplashed
-      ) {
-        bottle.splash();
-      }
-
-      this.level.enemies.forEach((enemy) => {
-        if (
-          enemy instanceof Endboss &&
-          bottle.isColliding(enemy) &&
-          !bottle.hasHit
-        ) {
-          bottle.hasHit = true;
-          bottle.splash();
-          enemy.hit(10);
-          const percent = (enemy.energy / enemy.maxEnergy) * 100;
-          this.statusbarEndboss.setPercentage(enemy.energy);
-        }
-      });
+      this.handleBottleGroundHit(bottle);
+      this.handleBottleEnemyHit(bottle);
     });
+    this.cleanupThrowableObjects();
+  }
 
+  handleBottleGroundHit(bottle) {
+    if (
+      bottle.y >= bottle.groundY &&
+      bottle.speedY <= 0 &&
+      !bottle.isSplashed
+    ) {
+      bottle.splash();
+    }
+  }
+
+  handleBottleEnemyHit(bottle) {
+    this.level.enemies.forEach((enemy) => {
+      if (this.isValidBottleHit(bottle, enemy)) {
+        this.applyBottleHit(bottle, enemy);
+      }
+    });
+  }
+
+  isValidBottleHit(bottle, enemy) {
+    return (
+      (enemy instanceof Endboss ||
+        enemy instanceof Chicken ||
+        enemy instanceof Chick) &&
+      bottle.isColliding(enemy) &&
+      !bottle.hasHit
+    );
+  }
+
+  applyBottleHit(bottle, enemy) {
+    bottle.hasHit = true;
+    bottle.splash();
+
+    if (enemy instanceof Endboss) {
+      this.hitEndboss(enemy);
+    } else {
+      this.killChicken(enemy);
+    }
+  }
+
+  hitEndboss(enemy) {
+    enemy.hit(10);
+    this.statusbarEndboss.setPercentage(enemy.energy);
+  }
+
+  killChicken(enemy) {
+    enemy.die();
+    if (enemy instanceof Chicken) {
+      AudioHub.playOne(AudioHub.chickenDead);
+    }
+    if (enemy instanceof Chick) {
+      AudioHub.playOne(AudioHub.chicksDead);
+    }
+  }
+
+  cleanupThrowableObjects() {
     this.throwableObjects = this.throwableObjects.filter(
       (b) => !b.markedForDeletion,
     );
