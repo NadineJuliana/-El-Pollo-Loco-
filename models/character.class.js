@@ -176,12 +176,12 @@ class Character extends MovableObject {
   }
 
   collectBottle() {
-    this.bottleAmount = Math.min(this.bottleAmount + 1, 10);
+    this.bottleAmount = Math.min(this.bottleAmount + 1, 20);
     this.registerActivity();
   }
 
   collectCoin() {
-    this.coinAmount = Math.min(this.coinAmount + 1, 10);
+    this.coinAmount = Math.min(this.coinAmount + 1, 20);
     this.registerActivity();
   }
 
