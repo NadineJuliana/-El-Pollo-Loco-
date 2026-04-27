@@ -3,8 +3,8 @@ class Chick extends MovableObject {
   height = 30;
   width = 40;
   offset = { top: 5, right: 5, bottom: 5, left: 5 };
-  isDeadAnimationPlaying = false;
   damage = 10;
+  isDeadAnimationPlaying = false;
   littleChickenWalking = ImageHub.chicken_small.walk;
   littleChickenDead = ImageHub.chicken_small.dead;
 

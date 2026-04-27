@@ -1,14 +1,14 @@
 class IntervalHub {
-    static allIntervals = [];
-    
-    static startInterval(func, timer) {
-        const newInterval = setInterval(func, timer);
-        IntervalHub.allIntervals.push(newInterval);
-        return newInterval;
-    }
+  static allIntervals = [];
 
-    static stopAllIntervals() {
-        IntervalHub.allIntervals.forEach(clearInterval);
-        IntervalHub.allIntervals = [];
-    }
+  static startInterval(func, timer) {
+    const newInterval = setInterval(func, timer);
+    IntervalHub.allIntervals.push(newInterval);
+    return newInterval;
+  }
+
+  static stopAllIntervals() {
+    IntervalHub.allIntervals.forEach(clearInterval);
+    IntervalHub.allIntervals = [];
+  }
 }

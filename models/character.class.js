@@ -13,7 +13,6 @@ class Character extends MovableObject {
   coinAmount = 0;
   deathPhase = null;
   isDeathJump = false;
-
   imagesIdle = ImageHub.character.idle;
   imagesIdleLong = ImageHub.character.long_idle;
   imagesWalking = ImageHub.character.walk;

@@ -1,9 +1,7 @@
 class ThrowableObject extends MovableObject {
   offset = { top: 15, right: 15, bottom: 10, left: 20 };
-
   bottleRotation = ImageHub.salsa_bottle.rotaion;
   bottleSplash = ImageHub.salsa_bottle.splash;
-
   isSplashed = false;
   hasHit = false;
   groundY = 370;
