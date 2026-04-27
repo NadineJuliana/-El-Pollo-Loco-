@@ -3,24 +3,26 @@ class Endboss extends MovableObject {
   width = 250;
   y = 60;
   offset = { top: 90, right: 40, bottom: 40, left: 40 };
+  spawnX = 4900;
   energy = 100;
-  speed = 0.4;
+  speed = 0.5;
+  baseSpeed = 0.5;
+  chaseSpeed = 1.6;
   damage = 20;
-  isDeadAnimationPlaying = false;
   deadAnimationFrame = 0;
   attackCooldown = 1000;
   lastAttack = 0;
-  state = "idle";
-  spawnX = 4900;
-  alertPlayed = false;
   lastTimeSeen = 0;
+  turnStartTime = 0;
+  turnDuration = 400;
+  state = "idle";
   world;
+  isDeadAnimationPlaying = false;
+  alertPlayed = false;
   otherDirection = false;
   turning = false;
   hasPlayedAlert = false;
   hasPlayedDead = false;
-  turnStartTime = 0;
-  turnDuration = 400;
   endbossWalking = ImageHub.endboss.walk;
   endbossAlert = ImageHub.endboss.alert;
   endbossAttack = ImageHub.endboss.attack;
@@ -44,36 +46,11 @@ class Endboss extends MovableObject {
     IntervalHub.startInterval(() => this.updateAnimation(), 150);
   }
 
-  animateWalking() {
-    this.playAnimation(this.endbossWalking);
-  }
-
-  animateAlert() {
-    this.playAnimation(this.endbossAlert);
-  }
-
-  animateAttack() {
-    this.playAnimation(this.endbossAttack);
-  }
-
-  animateHurt() {
-    this.playAnimation(this.endbossHurt);
-  }
-
-  animateDead() {
-    if (!this.isDeadAnimationPlaying) {
-      this.isDeadAnimationPlaying = true;
-      this.deadAnimationFrame = 0;
-    }
-    if (this.deadAnimationFrame < this.endbossDead.length) {
-      this.setImageFromCache(this.endbossDead, this.deadAnimationFrame++);
-    } else {
-      this.setImageFromCache(this.endbossDead, this.endbossDead.length - 1);
-    }
-  }
-
   updateAnimation() {
-    if (this.turning) return this.animateAlert();
+    if (this.turning) {
+      this.animateAlert();
+      return;
+    }
     this.resetAnimationIfStateChanged();
     if (this.isDead()) return this.animateDead();
     this.animateByState();
@@ -113,13 +90,30 @@ class Endboss extends MovableObject {
     return !this.isDead() && this.world && this.world.character;
   }
 
+  handleDetection() {
+    const character = this.world.character;
+    const distance = Math.abs(character.x - this.x);
+    if (distance < 650) {
+      this.lastTimeSeen = Date.now();
+      if (this.state === "idle") {
+        this.state = "alert";
+        this.alertPlayed = false;
+        this.turning = true;
+        this.turnStartTime = Date.now();
+      }
+    }
+  }
+
   transitionFromAlert() {
-    if (
-      this.state === "alert" &&
-      Date.now() - this.alertStartTime > 800 &&
-      !this.turning
-    ) {
-      this.state = "chase";
+    if (this.state === "alert") {
+      if (!this.alertStartTime) {
+        this.alertStartTime = Date.now();
+      }
+
+      if (Date.now() - this.alertStartTime > 800 && !this.turning) {
+        this.state = "chase";
+        this.alertStartTime = 0;
+      }
     }
   }
 
@@ -134,63 +128,124 @@ class Endboss extends MovableObject {
     (map[this.state] || (() => {}))();
   }
 
-  handleDetection() {
-    const character = this.world.character;
-    const distance = Math.abs(character.x - this.x);
-    if (distance < 400) {
-      this.lastTimeSeen = Date.now();
-      if (this.state === "idle") {
-        this.state = "alert";
-        this.alertPlayed = false;
-        this.turning = true;
-        this.turnStartTime = Date.now();
-      }
-    }
-  }
-
-  handleAlert() {
-    if (this.alertPlayed) return;
-    this.alertPlayed = true;
-    this.alertStartTime = Date.now();
-    setTimeout(() => {
-      if (!this.isDead() && this.world.character) {
-        const character = this.world.character;
-        this.otherDirection = character.x < this.x ? false : true;
-        this.turning = false;
-        this.state = "chase";
-      }
-    }, this.turnDuration);
-  }
-
   handleChase() {
     const character = this.world.character;
     const distance = character.x - this.x;
-    if (this.turning) return;
+    this.speed = this.chaseSpeed;
     this.otherDirection = distance < 0 ? false : true;
-    if (distance < -150) this.moveLeft();
-    else if (distance > 150) this.moveRight();
-    if (Math.abs(distance) <= 150) this.state = "attack";
-    if (Math.abs(distance) > 800 && Date.now() - this.lastTimeSeen > 3000)
+    if (distance < -10) this.moveLeft();
+    else if (distance > 10) this.moveRight();
+    if (Math.abs(distance) < 140) {
+      this.state = "attack";
+    }
+    if (Math.abs(distance) > 900 && Date.now() - this.lastTimeSeen > 3000) {
       this.state = "return";
+    }
   }
 
   handleAttack() {
     const character = this.world.character;
     const distance = character.x - this.x;
     this.otherDirection = distance < 0 ? false : true;
-    if (Math.abs(distance) > 150) {
+    if (distance < -30) this.moveLeft();
+    else if (distance > 30) this.moveRight();
+    if (Math.abs(distance) > 160) {
       this.state = "chase";
       return;
     }
-    if (distance < -30) this.moveLeft();
-    else if (distance > 30) this.moveRight();
     this.tryAttack();
   }
 
+  tryAttack() {
+    const now = Date.now();
+    const character = this.world.character;
+    if (this.world.isGameOver) return;
+    if (now - this.lastAttack < this.attackCooldown) return;
+    const distance = Math.abs(character.x - this.x);
+    if (distance < 120) {
+      character.hit(20);
+      this.world.statusbarHealth.setPercentage(character.energy);
+      AudioHub.playOne(AudioHub.endbossAttack);
+      this.lastAttack = now;
+    }
+  }
+
   handleReturn() {
-    if (this.isNearCharacter()) return this.startAlert();
-    this.moveTowardsSpawn();
-    this.finishReturnIfClose();
+    const character = this.world.character;
+    if (Math.abs(character.x - this.x) < 300) {
+      this.state = "alert";
+      this.turning = true;
+      this.turnStartTime = Date.now();
+      return;
+    }
+    this.speed = this.baseSpeed;
+    if (this.x < this.spawnX) {
+      this.moveRight();
+    } else {
+      this.moveLeft();
+    }
+    if (Math.abs(this.x - this.spawnX) < 5) {
+      this.x = this.spawnX;
+      this.state = "idle";
+    }
+  }
+
+  hit(damage = 10) {
+    if (this.isDead()) return;
+    this.energy -= damage;
+    if (this.energy <= 0) {
+      this.energy = 0;
+      this.state = "dead";
+      AudioHub.playOne(AudioHub.endbossDead, 0.4);
+      return;
+    }
+    this.state = "hurt";
+    AudioHub.playOne(AudioHub.endbossAttack);
+    clearTimeout(this.hurtTimeout);
+    this.hurtTimeout = setTimeout(() => {
+      if (!this.isDead()) {
+        this.state = "chase";
+      }
+    }, 500);
+  }
+
+  animateWalking() {
+    this.playAnimation(this.endbossWalking);
+  }
+
+  animateAlert() {
+    this.playAnimation(this.endbossAlert);
+  }
+
+  animateAttack() {
+    this.playAnimation(this.endbossAttack);
+  }
+
+  animateHurt() {
+    this.playAnimation(this.endbossHurt);
+  }
+
+  animateDead() {
+    if (!this.isDeadAnimationPlaying) {
+      this.isDeadAnimationPlaying = true;
+      this.deadAnimationFrame = 0;
+    }
+    if (this.deadAnimationFrame < this.endbossDead.length) {
+      this.setImageFromCache(this.endbossDead, this.deadAnimationFrame++);
+    } else {
+      this.setImageFromCache(this.endbossDead, this.endbossDead.length - 1);
+    }
+  }
+
+  handleAlert() {
+    if (!this.alertStartTime) {
+      this.alertStartTime = Date.now();
+    }
+    if (Date.now() - this.alertStartTime > this.turnDuration) {
+      this.turning = false;
+      this.state = "chase";
+      this.alertStartTime = 0;
+    }
   }
 
   isNearCharacter() {
@@ -228,38 +283,6 @@ class Endboss extends MovableObject {
 
   moveLeft() {
     this.x -= this.speed;
-  }
-
-  tryAttack() {
-    const now = Date.now();
-    if (now - this.lastAttack < this.attackCooldown) return;
-    const character = this.world.character;
-    if (this.world.isGameOver) return;
-    if (this.isColliding(character)) {
-      character.hit(10);
-      this.world.statusbarHealth.setPercentage(character.energy);
-      AudioHub.playOne(AudioHub.endbossAttack);
-      this.lastAttack = now;
-    }
-  }
-
-  hit(damage = 10) {
-    if (this.isDead()) return;
-    this.energy -= damage;
-    if (this.energy <= 0) {
-      this.energy = 0;
-      this.state = "dead";
-      AudioHub.playOne(AudioHub.endbossDead, 0.4);
-      return;
-    }
-    this.state = "hurt";
-    AudioHub.playOne(AudioHub.endbossAttack);
-    clearTimeout(this.hurtTimeout);
-    this.hurtTimeout = setTimeout(() => {
-      if (!this.isDead()) {
-        this.state = "chase";
-      }
-    }, 500);
   }
 
   handleAlertSound() {
