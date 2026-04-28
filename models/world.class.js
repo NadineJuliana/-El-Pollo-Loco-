@@ -13,7 +13,7 @@ class World {
   isGameWon = false;
   isRunning = true;
   maxCoins = 20;
-  maxBottles = 20;
+  maxBottles = 10;
 
   constructor(canvas, level) {
     this.ctx = canvas.getContext("2d");
