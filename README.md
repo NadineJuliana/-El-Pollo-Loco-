@@ -1,0 +1,1 @@
+A simple 2D jump-and-run game built with JavaScript. You play as Pepe, fighting enemies like chickens and chicks by jumping on them or throwing collected bottles. The game features a final boss — a giant chicken that can only be defeated with well-aimed bottle throws.
