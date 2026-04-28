@@ -90,8 +90,8 @@ function toggleSound() {
   toggleImage(
     "soundImage",
     !AudioHub.muted,
-    "../icons/001-volume.png",
-    "../icons/002-enable-sound.png",
+    "icons/001-volume.png",
+    "icons/002-enable-sound.png",
   );
 }
 

@@ -58,16 +58,6 @@ function disableContextMenu() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  AudioHub.loadMuteStatus();
-  toggleImage(
-    "soundImage",
-    !AudioHub.muted,
-    "../icons/001-volume.png",
-    "../icons/002-enable-sound.png",
-  );
-});
-
 function showDesktop() {
   setDisplay(true, true, true, false);
 }
@@ -101,6 +91,16 @@ function updateLayout() {
   if (isPortrait) return showMobilePortrait();
   showMobileLandscape();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  AudioHub.loadMuteStatus();
+  toggleImage(
+    "soundImage",
+    !AudioHub.muted,
+    "icons/001-volume.png",
+    "icons/002-enable-sound.png",
+  );
+});
 
 document.addEventListener("DOMContentLoaded", updateLayout);
 window.addEventListener("resize", updateLayout);
