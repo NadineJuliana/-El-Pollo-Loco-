@@ -171,42 +171,41 @@ class Endboss extends MovableObject {
   }
 
   handleReturn() {
-    const character = this.world.character;
-    if (Math.abs(character.x - this.x) < 300) {
-      this.state = "alert";
-      this.turning = true;
-      this.turnStartTime = Date.now();
+    if (this.isNearCharacter()) {
+      this.startAlert();
       return;
     }
     this.speed = this.baseSpeed;
-    if (this.x < this.spawnX) {
-      this.moveRight();
-    } else {
-      this.moveLeft();
-    }
-    if (Math.abs(this.x - this.spawnX) < 5) {
-      this.x = this.spawnX;
-      this.state = "idle";
-    }
+    this.moveTowardsSpawn();
+    this.finishReturnIfClose();
   }
 
-  hit(damage = 10) {
-    if (this.isDead()) return;
-    this.energy -= damage;
-    if (this.energy <= 0) {
-      this.energy = 0;
-      this.state = "dead";
-      AudioHub.playOne(AudioHub.endbossDead, 0.4);
-      return;
-    }
+  applyDamage(damage) {
+    this.energy = Math.max(0, this.energy - damage);
+  }
+
+  handleDeath() {
+    this.state = "dead";
+    AudioHub.playOne(AudioHub.endbossDead, 0.4);
+  }
+
+  handleHurt() {
     this.state = "hurt";
     AudioHub.playOne(AudioHub.endbossAttack);
     clearTimeout(this.hurtTimeout);
     this.hurtTimeout = setTimeout(() => {
-      if (!this.isDead()) {
-        this.state = "chase";
-      }
+      if (!this.isDead()) this.state = "chase";
     }, 500);
+  }
+
+  hit(damage = 10) {
+    if (this.isDead()) return;
+    this.applyDamage(damage);
+    if (this.energy <= 0) {
+      this.handleDeath();
+    } else {
+      this.handleHurt();
+    }
   }
 
   animateWalking() {
