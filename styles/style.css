@@ -392,10 +392,13 @@ p {
 }
 
 @media (max-width: 768px) {
-
     header,
     footer {
         display: none;
+    }
+
+    .endscreen__buttons {
+        padding: 0;
     }
 }
 
