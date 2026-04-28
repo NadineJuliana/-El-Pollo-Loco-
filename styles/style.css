@@ -29,7 +29,7 @@ main {
     width: 100dvw;
 }
 
-.portraitScreen__content{
+.portraitScreen__content {
     height: 100%;
     width: 100%;
     display: flex;
@@ -318,8 +318,10 @@ p {
 }
 
 .endscreen__image {
-    width: 600px;
-    height: 400px;
+    max-width: 100%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
 }
 
 .endscreen__buttons {
@@ -390,9 +392,11 @@ p {
 }
 
 @media (max-width: 768px) {
-  header, footer {
-    display: none;
-  }
+
+    header,
+    footer {
+        display: none;
+    }
 }
 
 @media (max-width: 500px) {
