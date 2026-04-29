@@ -31,7 +31,11 @@ class Chick extends MovableObject {
 
   animate() {
     IntervalHub.startInterval(() => {
-      if (!this.isDeadAnimationPlaying) this.moveLeft();
+      if (!this.isDeadAnimationPlaying) {
+        this.lastX = this.x;
+        this.lastY = this.y;
+        this.moveLeft();
+      }
     }, 1000 / 60);
     IntervalHub.startInterval(() => {
       if (!this.isDeadAnimationPlaying) {
