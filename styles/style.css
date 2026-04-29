@@ -13,7 +13,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100dvh - 170px);
+    height: calc(100dvh - 220px);
 }
 
 .portrait__screen {
@@ -45,7 +45,7 @@ header {
 
 footer {
     width: 100%;
-    height: 50px;
+    height: 100px;
 }
 
 button {
@@ -159,6 +159,7 @@ canvas {
 
 .game__buttons {
     filter: invert(1);
+    padding: 0 8px;
 }
 
 .controls__overlay {
@@ -207,25 +208,30 @@ canvas {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    gap: 8px;
+    gap: 16px;
+    padding: 0 0 8px 0;
 }
 
 .button__dialog {
+    width: 120px;
     font-size: 16px;
     padding: 8px;
-    background: none;
+    background: rgba(255, 255, 255, 0.8);
     font-weight: bold;
     border: none;
-    color: #A0220A;
+    border-radius: 10px;
+    border: 1px solid rgb(0, 104, 55);
+    color: rgb(0, 104, 55);
 }
 
 .button__dialog:hover {
-    color: rgb(227, 236, 236);
+    background: rgba(0, 104, 55, 0.8);
+    color: white;
 }
 
 dialog {
     overflow: auto;
-    border: none;
+    border: 1px solid #A0220A;
     background-image: url('../img/7_background/layers/air.png');
     background-position: center;
     background-size: cover;
@@ -286,6 +292,11 @@ dialog:not(.in-canvas) {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 16px 0;
+}
+
+.imprint__content {
+    padding: 16px 0;
 }
 
 .img__dialog {
@@ -293,17 +304,28 @@ dialog:not(.in-canvas) {
     height: 48px;
 }
 
+.list__gamebuttons {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+}
+
+.list__images {
+    display: flex;
+}
+
 li {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 32px;
+    gap: 16px;
     padding: 8px;
 }
 
 p {
     padding: 8px 20px;
+    line-height: 1.5;
 }
 
 .endscreen {
@@ -392,6 +414,7 @@ p {
 }
 
 @media (max-width: 768px) {
+
     header,
     footer {
         display: none;
