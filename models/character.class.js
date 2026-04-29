@@ -207,9 +207,7 @@ class Character extends MovableObject {
       !this.isDead() &&
       !this.isHurt()
     ) {
-      if (AudioHub.characterJump.paused) {
-        AudioHub.playOne(AudioHub.characterJump);
-      }
+      AudioHub.playOne(AudioHub.characterJump);
       AudioHub.stopOne(AudioHub.characterRun);
     }
   }
