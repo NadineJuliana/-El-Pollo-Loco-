@@ -3,10 +3,12 @@ class AudioHub {
   static volume = 0.3;
   static backgroundMusic = new Audio("audio/game/background.mp3");
   static gameStart = new Audio("audio/game/gameStart.mp3");
+  static gameWin = new Audio("audio/game/win.mp3");
+  static gameOver = new Audio("audio/game/loose.mp3");
 
   static characterSnoring = new Audio("audio/character/characterSnoring.mp3");
   static characterRun = new Audio("audio/character/characterRun.mp3");
-  static characterJump = new Audio("audio/character/characterJump.wav");
+  static characterJump = new Audio("audio/character/characterJump.mp3");
   static characterDamage = new Audio("audio/character/characterDamage.mp3");
   static characterDead = new Audio("audio/character/characterDead.wav");
 
@@ -24,6 +26,8 @@ class AudioHub {
   static allSounds = [
     AudioHub.backgroundMusic,
     AudioHub.gameStart,
+    AudioHub.gameWin,
+    AudioHub.gameOver,
     AudioHub.characterSnoring,
     AudioHub.characterRun,
     AudioHub.characterJump,
