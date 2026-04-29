@@ -161,22 +161,33 @@ class World {
   }
 
   checkThrowObjects() {
-    if (Keyboard.D && this.character.bottleAmount > 0 && !this.throwing) {
-      this.throwing = true;
-      const direction = this.character.otherDirection ? -1 : 1;
-      let bottle = new ThrowableObject(
-        this.character.x + 50 * direction,
-        this.character.y + 50,
-      );
-      bottle.otherDirection = this.character.otherDirection;
-      bottle.speedX = 6 * direction;
-      this.throwableObjects.push(bottle);
-      this.character.bottleAmount--;
-      this.character.registerActivity();
+    if (!this.canThrow()) {
+      this.resetThrowState();
+      return;
     }
-    if (!Keyboard.D) {
-      this.throwing = false;
-    }
+    this.createThrowableObject();
+    this.character.registerActivity();
+  }
+
+  canThrow() {
+    return Keyboard.D && this.character.bottleAmount > 0 && !this.throwing;
+  }
+
+  resetThrowState() {
+    if (!Keyboard.D) this.throwing = false;
+  }
+
+  createThrowableObject() {
+    this.throwing = true;
+    const direction = this.character.otherDirection ? -1 : 1;
+    const bottle = new ThrowableObject(
+      this.character.x + 50 * direction,
+      this.character.y + 50,
+    );
+    bottle.otherDirection = this.character.otherDirection;
+    bottle.speedX = 6 * direction;
+    this.throwableObjects.push(bottle);
+    this.character.bottleAmount--;
   }
 
   checkThrowableCollisions() {
@@ -292,35 +303,51 @@ class World {
   }
 
   checkGameOver() {
+    if (this.handleCharacterDeath()) return;
+    this.handleWinCondition();
+  }
+
+  handleCharacterDeath() {
     const character = this.character;
-    const endboss = this.level.enemies.find((e) => e instanceof Endboss);
-    if (!this.isGameOver && character.isDead()) {
-      Keyboard.RIGHT = false;
-      Keyboard.LEFT = false;
-      Keyboard.SPACE = false;
-      Keyboard.D = false;
-      const animationDone =
-        character.deadAnimationFrame >= character.imagesDead.length - 1;
-      const fallenDone = character.y >= character.groundLevel + 300;
-      if (animationDone && fallenDone) {
-        this.isGameOver = true;
-        this.endGame();
-      }
+    if (this.isGameOver || !character.isDead()) return false;
+    this.stopControls();
+    if (this.isDeathAnimationFinished(character)) {
+      this.isGameOver = true;
+      this.endGame();
+      return true;
     }
-    if (
-      !this.isGameWon &&
-      endboss &&
-      endboss.isDead() &&
-      endboss.deadAnimationFrame >= endboss.endbossDead.length - 1
-    ) {
+    return false;
+  }
+
+  handleWinCondition() {
+    const endboss = this.level.enemies.find((e) => e instanceof Endboss);
+    if (!endboss || this.isGameWon) return;
+    if (this.isEndbossDead(endboss)) {
       this.isGameWon = true;
-      Keyboard.RIGHT = false;
-      Keyboard.LEFT = false;
-      Keyboard.SPACE = false;
-      Keyboard.D = false;
-      this.isGameWon = true;
+      this.stopControls();
       this.endGame();
     }
+  }
+
+  stopControls() {
+    Keyboard.RIGHT = false;
+    Keyboard.LEFT = false;
+    Keyboard.SPACE = false;
+    Keyboard.D = false;
+  }
+
+  isDeathAnimationFinished(character) {
+    return (
+      character.deadAnimationFrame >= character.imagesDead.length - 1 &&
+      character.y >= character.groundLevel + 300
+    );
+  }
+
+  isEndbossDead(endboss) {
+    return (
+      endboss.isDead() &&
+      endboss.deadAnimationFrame >= endboss.endbossDead.length - 1
+    );
   }
 
   endGame() {
@@ -331,30 +358,59 @@ class World {
 
   draw() {
     if (!this.isRunning) return;
+    this.clearCanvas();
+    if (this.handleGameEndState()) return;
+    this.renderScene();
+    updateUI();
+    requestAnimationFrame(() => this.draw());
+  }
+
+  clearCanvas() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    if (this.isGameOver || this.isGameWon) {
-      updateUI();
-      return;
-    }
+  }
+
+  handleGameEndState() {
+    if (!this.isGameOver && !this.isGameWon) return false;
+    updateUI();
+    return true;
+  }
+
+  renderScene() {
+    this.translateCamera();
+    this.addWorldObjects();
+    this.resetCamera();
+  }
+
+  translateCamera() {
     this.ctx.translate(this.camera_x, 0);
+  }
+
+  resetCamera() {
+    this.ctx.translate(-this.camera_x, 0);
+  }
+
+  addWorldObjects() {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
-
     this.ctx.translate(-this.camera_x, 0);
+    this.addUI();
+    this.ctx.translate(this.camera_x, 0);
+    this.addGameplayObjects();
+  }
+
+  addUI() {
     this.addToMap(this.statusbarHealth);
     this.addToMap(this.statusbarCoin);
     this.addToMap(this.statusbarBottle);
     this.addToMap(this.statusbarEndboss);
-    this.ctx.translate(this.camera_x, 0);
+  }
 
+  addGameplayObjects() {
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.throwableObjects);
     this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.level.bottles);
-    this.ctx.translate(-this.camera_x, 0);
-    updateUI();
-    requestAnimationFrame(() => this.draw());
   }
 
   addObjectsToMap(objects) {
