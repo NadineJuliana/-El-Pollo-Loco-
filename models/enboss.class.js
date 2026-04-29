@@ -2,7 +2,7 @@ class Endboss extends MovableObject {
   height = 400;
   width = 250;
   y = 60;
-  offset = { top: 90, right: 40, bottom: 40, left: 40 };
+  offset = { top: 90, right: 40, bottom: 40, left: 30 };
   spawnX = 4900;
   energy = 100;
   speed = 0.5;
@@ -162,7 +162,7 @@ class Endboss extends MovableObject {
     if (this.world.isGameOver) return;
     if (now - this.lastAttack < this.attackCooldown) return;
     const distance = Math.abs(character.x - this.x);
-    if (distance < 120) {
+    if (this.isColliding(character)) {
       character.hit(20);
       this.world.statusbarHealth.setPercentage(character.energy);
       AudioHub.playOne(AudioHub.endbossAttack);
