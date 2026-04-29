@@ -26,24 +26,39 @@ class Level {
 
   placeObjects(objects, options) {
     const placed = [];
-    const { xMin, xMax, yMin, yMax } = options;
     objects.forEach((object) => {
-      let placedSuccessfully = false;
-      let attempts = 0;
-      while (!placedSuccessfully && attempts < 100) {
-        object.x = xMin + Math.random() * (xMax - xMin);
-        object.y = yMin + Math.random() * (yMax - yMin);
-        object.getRealFrame();
-        let collision = placed.some((other) => {
-          other.getRealFrame();
-          return object.isColliding(other);
-        });
-        if (!collision) {
-          placed.push(object);
-          placedSuccessfully = true;
-        }
-        attempts++;
-      }
+      this.placeSingleObject(object, placed, options);
     });
+  }
+
+  getRandomPosition(xMin, xMax, yMin, yMax) {
+    return {
+      x: xMin + Math.random() * (xMax - xMin),
+      y: yMin + Math.random() * (yMax - yMin),
+    };
+  }
+
+  hasCollision(object, placed) {
+    return placed.some((other) => {
+      other.getRealFrame();
+      return object.isColliding(other);
+    });
+  }
+
+  placeSingleObject(object, placed, options) {
+    const { xMin, xMax, yMin, yMax } = options;
+    let attempts = 0;
+    while (attempts < 100) {
+      const pos = this.getRandomPosition(xMin, xMax, yMin, yMax);
+      object.x = pos.x;
+      object.y = pos.y;
+      object.getRealFrame();
+      if (!this.hasCollision(object, placed)) {
+        placed.push(object);
+        return true;
+      }
+      attempts++;
+    }
+    return false;
   }
 }
