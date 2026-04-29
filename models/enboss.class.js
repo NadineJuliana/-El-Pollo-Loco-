@@ -15,6 +15,14 @@ class Endboss extends MovableObject {
   lastTimeSeen = 0;
   turnStartTime = 0;
   turnDuration = 400;
+  rushStartTime = 0;
+  rushDuration = 600;
+  rushCooldown = 1200;
+  lastRush = 0;
+  jumpStartTime = 0;
+  jumpDuration = 700;
+  jumpSpeedY = 18;
+  isJumpAttack = false;
   state = "idle";
   world;
   isDeadAnimationPlaying = false;
@@ -109,7 +117,6 @@ class Endboss extends MovableObject {
       if (!this.alertStartTime) {
         this.alertStartTime = Date.now();
       }
-
       if (Date.now() - this.alertStartTime > 800 && !this.turning) {
         this.state = "chase";
         this.alertStartTime = 0;
@@ -124,22 +131,96 @@ class Endboss extends MovableObject {
       chase: () => this.handleChase(),
       attack: () => this.handleAttack(),
       return: () => this.handleReturn(),
+      rush: () => this.handleRush(),
+      jump: () => this.handleJump(),
     };
     (map[this.state] || (() => {}))();
   }
 
-  handleChase() {
-    const character = this.world.character;
-    const distance = character.x - this.x;
-    this.speed = this.chaseSpeed;
+  getDistance() {
+    return this.world.character.x - this.x;
+  }
+
+  getAbsDistance() {
+    return Math.abs(this.getDistance());
+  }
+
+  faceCharacter(distance) {
     this.otherDirection = distance < 0 ? false : true;
-    if (distance < -10) this.moveLeft();
-    else if (distance > 10) this.moveRight();
-    if (Math.abs(distance) < 140) {
-      this.state = "attack";
-    }
-    if (Math.abs(distance) > 900 && Date.now() - this.lastTimeSeen > 3000) {
+  }
+
+  moveToCharacter(distance, speed) {
+    this.x += distance < 0 ? -speed : speed;
+  }
+
+  handleChase() {
+    const distance = this.getDistance();
+    this.speed = this.chaseSpeed;
+    this.faceCharacter(distance);
+    this.moveToCharacter(distance, 2);
+    if (this.getAbsDistance() < 140) this.state = "attack";
+    if (this.getAbsDistance() > 900 && Date.now() - this.lastTimeSeen > 3000)
       this.state = "return";
+    this.tryStartRush(distance);
+  }
+
+  handleRush() {
+    const distance = this.getDistance();
+    if (this.tryJumpInRush()) return;
+    this.speed = 4 + Math.random() * 3;
+    this.faceCharacter(distance);
+    this.moveToCharacter(distance, this.speed);
+    this.finishRush();
+  }
+
+  tryJumpInRush() {
+    if (!this.isJumpAttack && Math.random() < 0.05) {
+      this.startJump();
+      return true;
+    }
+    return false;
+  }
+
+  startJump() {
+    this.state = "jump";
+    this.isJumpAttack = true;
+    this.jumpStartTime = Date.now();
+    this.speedY = this.jumpSpeedY;
+  }
+
+  finishRush() {
+    if (Date.now() - this.rushStartTime > this.rushDuration) {
+      this.state = "attack";
+      this.speed = this.baseSpeed;
+    }
+  }
+
+  tryStartRush(distance) {
+    const now = Date.now();
+    if (
+      this.getAbsDistance() > 50 &&
+      this.getAbsDistance() < 450 &&
+      now - this.lastRush > this.rushCooldown &&
+      Math.random() < 0.5
+    ) {
+      this.state = "rush";
+      this.rushStartTime = now;
+      this.lastRush = now;
+    }
+  }
+
+  handleJump() {
+    const distance = this.getDistance();
+    const direction = distance < 0 ? -1 : 1;
+    this.x += direction * 8;
+    this.y -= this.speedY;
+    this.speedY -= 1.2;
+    if (this.speedY < 0) this.x += direction * 2;
+    if (this.y >= 60) {
+      this.y = 60;
+      this.speedY = 0;
+      this.isJumpAttack = false;
+      this.state = "attack";
     }
   }
 
@@ -154,6 +235,9 @@ class Endboss extends MovableObject {
       return;
     }
     this.tryAttack();
+    if (Date.now() - this.lastAttack < 300) {
+      return;
+    }
   }
 
   tryAttack() {
