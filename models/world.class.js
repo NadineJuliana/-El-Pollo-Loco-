@@ -95,11 +95,12 @@ class World {
   }
 
   crossedEnemyTop(enemy) {
-    const tolerance = 5;
+    const tolerance = Math.abs(this.character.speedY) + 5;
     const lastBottom = this.getCharLastBottom();
     const bottom = this.getCharBottom();
-    const top = enemy.realY;
-    return lastBottom <= top + tolerance && bottom >= top - tolerance;
+    const topNow = enemy.realY;
+    const topLast = enemy.lastY ?? enemy.realY;
+    return lastBottom <= topLast + tolerance && bottom >= topNow - tolerance;
   }
 
   isAboveEnemy(enemy) {
@@ -113,13 +114,14 @@ class World {
 
   handleStomp(enemy) {
     enemy.die();
+    this.character.y = enemy.realY - this.character.realHeight;
+    this.character.speedY = 12;
     if (enemy instanceof Chicken) {
       AudioHub.playOne(AudioHub.chickenDead);
     }
     if (enemy instanceof Chick) {
       AudioHub.playOne(AudioHub.chicksDead);
     }
-    this.character.speedY = 12;
   }
 
   getCharBottom() {
