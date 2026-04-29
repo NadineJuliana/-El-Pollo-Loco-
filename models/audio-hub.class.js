@@ -55,7 +55,8 @@ class AudioHub {
     if (this.muted) return;
     sound.volume = volume;
     sound.currentTime = 0;
-    sound.play();
+    const playPromise = sound.play();
+    if (playPromise) playPromise.catch(() => {});
   }
 
   static stopOne(sound) {
