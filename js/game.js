@@ -15,6 +15,8 @@ function init() {
 }
 
 function startGame() {
+  winSound = false;
+  loseSound = false;
   hasValidOrientation = false;
   document.getElementById("startscreen").style.display = "none";
   document.getElementById("canvas").style.display = "block";

@@ -1,4 +1,6 @@
 let controlsVisible = false;
+let winSound = false;
+let loseSound = false;
 
 function openDialog(id) {
   const dialog = document.getElementById(id);
@@ -37,11 +39,19 @@ function updateUI() {
   if (!world) return;
   if (world.isGameOver) {
     document.getElementById("lostScreen").classList.remove("d-none");
+    if (!loseSound) {
+      AudioHub.playOne(AudioHub.gameOver);
+      loseSound = true;
+    }
   } else {
     document.getElementById("lostScreen").classList.add("d-none");
   }
   if (world.isGameWon) {
     document.getElementById("winScreen").classList.remove("d-none");
+    if (!winSound) {
+      AudioHub.playOne(AudioHub.gameWin);
+      winSound = true;
+    }
   } else {
     document.getElementById("winScreen").classList.add("d-none");
   }
@@ -70,6 +80,8 @@ function backHome() {
 }
 
 function restartGame() {
+  winSound = false;
+  loseSound = false;
   IntervalHub.stopAllIntervals();
   AudioHub.stopAll();
   const canvas = document.getElementById("canvas");
