@@ -114,7 +114,9 @@ class World {
 
   handleStomp(enemy) {
     enemy.die();
-    this.character.y = enemy.realY - this.character.realHeight;
+    requestAnimationFrame(() => {
+      this.character.y = enemy.realY - this.character.realHeight;
+    });
     this.character.speedY = 12;
     if (enemy instanceof Chicken) {
       AudioHub.playOne(AudioHub.chickenDead);
