@@ -20,9 +20,9 @@ class World {
     this.canvas = canvas;
     this.level = level;
     AudioHub.playOne(AudioHub.gameStart);
-    this.draw();
     this.setWorld();
     this.run();
+    this.draw();
   }
 
   setWorld() {
@@ -30,6 +30,7 @@ class World {
     this.character.animate();
     this.level.enemies.forEach((enemy) => {
       enemy.world = this;
+      enemy.collidable = true;
       enemy.animate();
     });
     this.level.coins.forEach((coin) => {
@@ -42,7 +43,7 @@ class World {
 
   run() {
     IntervalHub.startInterval(() => {
-      if (this.isGameOver) return;
+      if (!this.isRunning) return;
       this.checkEnemyCollisions();
       this.checkThrowObjects();
       this.checkCollisionCoin();
@@ -52,7 +53,17 @@ class World {
       this.checkEndbossState();
       this.checkGameOver();
       this.updateStatusbars();
+      this.updatePreviousPositions();
     }, 1000 / 60);
+  }
+
+  updatePreviousPositions() {
+    this.character.lastX = this.character.x;
+    this.character.lastY = this.character.y;
+    this.level.enemies.forEach((enemy) => {
+      enemy.lastX = enemy.x;
+      enemy.lastY = enemy.y;
+    });
   }
 
   updateStatusbars() {
@@ -68,55 +79,68 @@ class World {
     );
   }
 
-  checkStomp(enemy) {
-    if (this.isInvalidStomp(enemy)) return false;
-    if (this.isStompHit(enemy)) {
-      this.handleStomp(enemy);
-      return true;
+  checkEnemyCollisions() {
+    const character = this.character;
+    const stompedEnemies = [];
+    for (let i = this.level.enemies.length - 1; i >= 0; i--) {
+      const enemy = this.level.enemies[i];
+      if (!enemy || !enemy.collidable) continue;
+      if (!character.isColliding(enemy)) continue;
+      if (enemy instanceof Chicken || enemy instanceof Chick) {
+        if (this.isStompHit(enemy)) {
+          stompedEnemies.push(enemy);
+        } else {
+          this.damageCharacter();
+        }
+      } else {
+        this.damageCharacter();
+      }
     }
-    return false;
+    if (stompedEnemies.length > 0) {
+      this.handleMultiStomp(stompedEnemies);
+    }
   }
 
-  isInvalidStomp(enemy) {
-    return enemy.isDeadAnimationPlaying;
+  handleMultiStomp(enemies) {
+    enemies.forEach((enemy) => {
+      enemy.collidable = false;
+      enemy.die();
+      if (enemy instanceof Chicken) {
+        AudioHub.playOne(AudioHub.chickenDead);
+      }
+      if (enemy instanceof Chick) {
+        AudioHub.playOne(AudioHub.chicksDead);
+      }
+    });
+    this.character.speedY = 12;
+    let highestEnemy = enemies[0];
+    for (const enemy of enemies) {
+      if (enemy.y < highestEnemy.y) {
+        highestEnemy = enemy;
+      }
+    }
+    this.character.y = highestEnemy.y - this.character.height;
   }
 
   isStompHit(enemy) {
-    return (
-      this.isFalling() &&
-      this.crossedEnemyTop(enemy) &&
-      this.isAboveEnemy(enemy) &&
-      this.isVerticalHit(enemy)
-    );
-  }
-
-  isFalling() {
-    return this.character.speedY < -2;
-  }
-
-  crossedEnemyTop(enemy) {
-    const tolerance = Math.abs(this.character.speedY) + 5;
-    const lastBottom = this.getCharLastBottom();
-    const bottom = this.getCharBottom();
-    const topNow = enemy.realY;
-    const topLast = enemy.lastY ?? enemy.realY;
-    return lastBottom <= topLast + tolerance && bottom >= topNow - tolerance;
-  }
-
-  isAboveEnemy(enemy) {
-    const x = this.getCharCenterX();
-    return x > enemy.realX - 10 && x < enemy.realX + enemy.realWidth + 10;
-  }
-
-  isVerticalHit(enemy) {
-    return this.getCharBottom() < enemy.realY + 20;
+    const character = this.character;
+    const lastBottom = character.lastY + character.height;
+    const currentBottom = character.y + character.height;
+    const enemyTop = enemy.y;
+    const isFalling = character.speedY < -2;
+    const tolerance = Math.abs(character.speedY) * 2 + 5;
+    const wasAbove = lastBottom <= enemyTop + tolerance;
+    const isNowInside = currentBottom >= enemyTop - tolerance;
+    const horizontal =
+      character.x + character.width > enemy.x + 5 &&
+      character.x < enemy.x + enemy.width - 5;
+    return isFalling && wasAbove && isNowInside && horizontal;
   }
 
   handleStomp(enemy) {
+    enemy.collidable = false;
     enemy.die();
-    requestAnimationFrame(() => {
-      this.character.y = enemy.realY - this.character.realHeight;
-    });
+    this.character.y = enemy.y - this.character.height;
     this.character.speedY = 12;
     if (enemy instanceof Chicken) {
       AudioHub.playOne(AudioHub.chickenDead);
@@ -124,37 +148,6 @@ class World {
     if (enemy instanceof Chick) {
       AudioHub.playOne(AudioHub.chicksDead);
     }
-  }
-
-  getCharBottom() {
-    return this.character.realY + this.character.realHeight;
-  }
-
-  getCharLastBottom() {
-    return this.character.lastY + this.character.realHeight;
-  }
-
-  getCharCenterX() {
-    return this.character.realX + this.character.realWidth / 2;
-  }
-
-  checkEnemyCollisions() {
-    for (const enemy of this.level.enemies) {
-      if (!this.character.isColliding(enemy)) continue;
-      if (this.character.isDeadAnimationPlaying && this.character.isDeathJump)
-        continue;
-      if (enemy instanceof Chicken || enemy instanceof Chick) {
-        const stomped = this.checkStomp(enemy);
-        if (!stomped) this.checkSideOrBottomHit(enemy);
-      } else {
-        this.damageCharacter();
-      }
-    }
-  }
-
-  checkSideOrBottomHit(enemy) {
-    if (enemy.isDeadAnimationPlaying) return;
-    this.damageCharacter();
   }
 
   damageCharacter() {
@@ -231,7 +224,6 @@ class World {
   applyBottleHit(bottle, enemy) {
     bottle.hasHit = true;
     bottle.splash();
-
     if (enemy instanceof Endboss) {
       this.hitEndboss(enemy);
     } else {
