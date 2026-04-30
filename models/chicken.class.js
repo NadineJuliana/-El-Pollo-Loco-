@@ -1,8 +1,8 @@
 class Chicken extends MovableObject {
-  y = 365;
+  y = 360;
   height = 50;
   width = 70;
-  offset = { top: 5, right: 5, bottom: 10, left: 5 };
+  offset = { top: 10, right: 5, bottom: 5, left: 5 };
   damage = 10;
   isDeadAnimationPlaying = false;
   bigChickenWalking = ImageHub.chicken_normal.walk;
@@ -18,6 +18,7 @@ class Chicken extends MovableObject {
 
   die() {
     this.isDeadAnimationPlaying = true;
+    this.speed = 0;
     this.setImageFromCache(this.bigChickenDead, 0);
     setTimeout(() => {
       if (this.world) {
@@ -31,11 +32,10 @@ class Chicken extends MovableObject {
 
   animate() {
     IntervalHub.startInterval(() => {
-      if (!this.isDeadAnimationPlaying){
-        this.lastX = this.x;
-        this.lastY = this.y;
-         this.moveLeft();
-      }
+      if (this.isDeadAnimationPlaying) return;
+      this.lastX = this.x;
+      this.lastY = this.y;
+      this.moveLeft();
     }, 1000 / 60);
 
     IntervalHub.startInterval(() => {

@@ -2,7 +2,7 @@ class Chick extends MovableObject {
   y = 380;
   height = 30;
   width = 40;
-  offset = { top: 5, right: 5, bottom: 5, left: 5 };
+  offset = { top: 0, right: 5, bottom: 5, left: 5 };
   damage = 10;
   isDeadAnimationPlaying = false;
   littleChickenWalking = ImageHub.chicken_small.walk;
@@ -18,6 +18,7 @@ class Chick extends MovableObject {
 
   die() {
     this.isDeadAnimationPlaying = true;
+    this.speed = 0;
     this.setImageFromCache(this.littleChickenDead, 0);
     setTimeout(() => {
       if (this.world) {
@@ -31,11 +32,10 @@ class Chick extends MovableObject {
 
   animate() {
     IntervalHub.startInterval(() => {
-      if (!this.isDeadAnimationPlaying) {
-        this.lastX = this.x;
-        this.lastY = this.y;
-        this.moveLeft();
-      }
+      if (this.isDeadAnimationPlaying) return;
+      this.lastX = this.x;
+      this.lastY = this.y;
+      this.moveLeft();
     }, 1000 / 60);
     IntervalHub.startInterval(() => {
       if (!this.isDeadAnimationPlaying) {
