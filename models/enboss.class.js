@@ -30,7 +30,6 @@ class Endboss extends MovableObject {
   otherDirection = false;
   turning = false;
   hasPlayedAlert = false;
-  hasPlayedDead = false;
   endbossWalking = ImageHub.endboss.walk;
   endbossAlert = ImageHub.endboss.alert;
   endbossAttack = ImageHub.endboss.attack;
@@ -86,6 +85,9 @@ class Endboss extends MovableObject {
   updateState() {
     if (this.world.isGameOver) return;
     if (!this.canUpdateState()) return;
+    if (this.isJumpAttack) {
+      this.handleJump();
+    }
     if (!this.isDead()) {
       this.handleDetection();
       this.transitionFromAlert();
@@ -274,6 +276,7 @@ class Endboss extends MovableObject {
   }
 
   handleHurt() {
+    if (this.isJumpAttack) return;
     this.state = "hurt";
     AudioHub.playOne(AudioHub.endbossAttack);
     clearTimeout(this.hurtTimeout);
@@ -287,8 +290,12 @@ class Endboss extends MovableObject {
     this.applyDamage(damage);
     if (this.energy <= 0) {
       this.handleDeath();
+      return;
     } else {
       this.handleHurt();
+    }
+    if (!this.isJumpAttack) {
+      this.state = "hurt";
     }
   }
 
