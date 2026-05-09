@@ -141,6 +141,8 @@ class Character extends MovableObject {
   jumpIfPossible() {
     if (Keyboard.SPACE && !this.isAboveGround()) {
       this.jump();
+      AudioHub.playOne(AudioHub.characterJump);
+      AudioHub.stopOne(AudioHub.characterRun);
       return true;
     }
     return false;
@@ -175,7 +177,10 @@ class Character extends MovableObject {
   }
 
   collectBottle() {
-    this.bottleAmount = Math.min(this.bottleAmount + 1, this.world.level.maxBottles);
+    this.bottleAmount = Math.min(
+      this.bottleAmount + 1,
+      this.world.level.maxBottles,
+    );
     this.registerActivity();
   }
 
@@ -196,18 +201,6 @@ class Character extends MovableObject {
         AudioHub.playOne(AudioHub.characterRun);
       }
     } else {
-      AudioHub.stopOne(AudioHub.characterRun);
-    }
-  }
-
-  handleJumpSound() {
-    if (
-      this.isAboveGround() &&
-      this.speedY > 0 &&
-      !this.isDead() &&
-      !this.isHurt()
-    ) {
-      AudioHub.playOne(AudioHub.characterJump);
       AudioHub.stopOne(AudioHub.characterRun);
     }
   }
@@ -254,7 +247,6 @@ class Character extends MovableObject {
   handleAllSounds() {
     this.handleDeadSound();
     this.handleHurtSound();
-    this.handleJumpSound();
     this.handleRunSound();
     this.handleIdleSound();
   }
