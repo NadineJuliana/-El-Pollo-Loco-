@@ -7,7 +7,7 @@ class Endboss extends MovableObject {
   energy = 100;
   speed = 0.5;
   baseSpeed = 0.5;
-  chaseSpeed = 1.6;
+  chaseSpeed = 1.1;
   damage = 20;
   deadAnimationFrame = 0;
   attackCooldown = 1000;
@@ -16,7 +16,7 @@ class Endboss extends MovableObject {
   turnStartTime = 0;
   turnDuration = 400;
   rushStartTime = 0;
-  rushDuration = 600;
+  rushDuration = 450;
   rushCooldown = 1200;
   lastRush = 0;
   jumpStartTime = 0;
@@ -103,7 +103,7 @@ class Endboss extends MovableObject {
   handleDetection() {
     const character = this.world.character;
     const distance = Math.abs(character.x - this.x);
-    if (distance < 650) {
+    if (distance < 350) {
       this.lastTimeSeen = Date.now();
       if (this.state === "idle") {
         this.state = "alert";
@@ -159,7 +159,7 @@ class Endboss extends MovableObject {
     const distance = this.getDistance();
     this.speed = this.chaseSpeed;
     this.faceCharacter(distance);
-    this.moveToCharacter(distance, 2);
+    this.moveToCharacter(distance, this.chaseSpeed);
     if (this.getAbsDistance() < 140) this.state = "attack";
     if (this.getAbsDistance() > 900 && Date.now() - this.lastTimeSeen > 3000)
       this.state = "return";
@@ -203,7 +203,7 @@ class Endboss extends MovableObject {
       this.getAbsDistance() > 50 &&
       this.getAbsDistance() < 450 &&
       now - this.lastRush > this.rushCooldown &&
-      Math.random() < 0.5
+      Math.random() < 0.2
     ) {
       this.state = "rush";
       this.rushStartTime = now;
