@@ -4,7 +4,6 @@ class Endboss extends MovableObject {
   y = 60;
   offset = { top: 90, right: 40, bottom: 40, left: 30 };
   spawnX = 4900;
-
   energy = 100;
   speed = 0.5;
   baseSpeed = 0.5;
@@ -16,7 +15,6 @@ class Endboss extends MovableObject {
   rushDuration = 450;
   jumpSpeedY = 18;
   jumpDuration = 700;
-
   deadAnimationFrame = 0;
   lastAttack = 0;
   lastTimeSeen = 0;
@@ -49,6 +47,7 @@ class Endboss extends MovableObject {
     this.loadImages(this.endbossDead);
     this.x = this.spawnX;
     this.animationManager = new EndbossAnimationManager(this);
+    this.movementManager = new EndbossMovementManager(this);
   }
 
   animate() {
@@ -61,20 +60,15 @@ class Endboss extends MovableObject {
 
   updateState() {
     if (this.world.isGameOver) return;
-    if (!this.canUpdateState()) return;
+    if (this.isDead() || !this.world?.character) return;
     if (this.isJumpAttack) {
       this.handleJump();
     }
     if (!this.isDead()) {
       this.handleDetection();
-      this.transitionFromAlert();
       this.handleCurrentState();
     }
     this.handleAlertSound();
-  }
-
-  canUpdateState() {
-    return !this.isDead() && this.world && this.world.character;
   }
 
   handleDetection() {
@@ -87,18 +81,6 @@ class Endboss extends MovableObject {
         this.alertPlayed = false;
         this.turning = true;
         this.turnStartTime = Date.now();
-      }
-    }
-  }
-
-  transitionFromAlert() {
-    if (this.state === "alert") {
-      if (!this.alertStartTime) {
-        this.alertStartTime = Date.now();
-      }
-      if (Date.now() - this.alertStartTime > 800 && !this.turning) {
-        this.state = "chase";
-        this.alertStartTime = 0;
       }
     }
   }
@@ -124,19 +106,11 @@ class Endboss extends MovableObject {
     return Math.abs(this.getDistance());
   }
 
-  faceCharacter(distance) {
-    this.otherDirection = distance < 0 ? false : true;
-  }
-
-  moveToCharacter(distance, speed) {
-    this.x += distance < 0 ? -speed : speed;
-  }
-
   handleChase() {
     const distance = this.getDistance();
     this.speed = this.chaseSpeed;
-    this.faceCharacter(distance);
-    this.moveToCharacter(distance, this.chaseSpeed);
+    this.otherDirection = distance >= 0;
+    this.x += distance < 0 ? -this.chaseSpeed : this.chaseSpeed;
     if (this.getAbsDistance() < 140) this.state = "attack";
     if (this.getAbsDistance() > 900 && Date.now() - this.lastTimeSeen > 3000)
       this.state = "return";
@@ -147,8 +121,8 @@ class Endboss extends MovableObject {
     const distance = this.getDistance();
     if (this.tryJumpInRush()) return;
     this.speed = 4 + Math.random() * 3;
-    this.faceCharacter(distance);
-    this.moveToCharacter(distance, this.speed);
+    this.otherDirection = distance >= 0;
+    this.x += distance < 0 ? -this.chaseSpeed : this.chaseSpeed;
     this.finishRush();
   }
 
@@ -214,9 +188,6 @@ class Endboss extends MovableObject {
       return;
     }
     this.tryAttack();
-    if (Date.now() - this.lastAttack < 300) {
-      return;
-    }
   }
 
   tryAttack() {
@@ -271,17 +242,16 @@ class Endboss extends MovableObject {
     } else {
       this.handleHurt();
     }
-    if (!this.isJumpAttack) {
-      this.state = "hurt";
-    }
   }
 
   handleAlert() {
     if (!this.alertStartTime) {
       this.alertStartTime = Date.now();
     }
-    if (Date.now() - this.alertStartTime > this.turnDuration) {
+    if (this.turning && Date.now() - this.turnStartTime > this.turnDuration) {
       this.turning = false;
+    }
+    if (Date.now() - this.alertStartTime > 800 && !this.turning) {
       this.state = "chase";
       this.alertStartTime = 0;
     }
@@ -299,13 +269,7 @@ class Endboss extends MovableObject {
   }
 
   moveTowardsSpawn() {
-    if (this.x < this.spawnX) {
-      this.moveRight();
-      this.otherDirection = true;
-    } else if (this.x > this.spawnX) {
-      this.moveLeft();
-      this.otherDirection = false;
-    }
+    this.movementManager.moveTowardsSpawn();
   }
 
   finishReturnIfClose() {
@@ -317,11 +281,11 @@ class Endboss extends MovableObject {
   }
 
   moveRight() {
-    this.x += this.speed;
+    this.movementManager.moveRight();
   }
 
   moveLeft() {
-    this.x -= this.speed;
+    this.movementManager.moveLeft();
   }
 
   handleAlertSound() {
