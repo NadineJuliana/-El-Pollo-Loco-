@@ -4,24 +4,26 @@ class Endboss extends MovableObject {
   y = 60;
   offset = { top: 90, right: 40, bottom: 40, left: 30 };
   spawnX = 4900;
+
   energy = 100;
   speed = 0.5;
   baseSpeed = 0.5;
   chaseSpeed = 1.1;
   damage = 20;
-  deadAnimationFrame = 0;
   attackCooldown = 1000;
+  rushCooldown = 1200;
+  turnDuration = 400;
+  rushDuration = 450;
+  jumpSpeedY = 18;
+  jumpDuration = 700;
+
+  deadAnimationFrame = 0;
   lastAttack = 0;
   lastTimeSeen = 0;
   turnStartTime = 0;
-  turnDuration = 400;
   rushStartTime = 0;
-  rushDuration = 450;
-  rushCooldown = 1200;
   lastRush = 0;
   jumpStartTime = 0;
-  jumpDuration = 700;
-  jumpSpeedY = 18;
   isJumpAttack = false;
   state = "idle";
   world;
@@ -46,40 +48,15 @@ class Endboss extends MovableObject {
     this.loadImages(this.endbossHurt);
     this.loadImages(this.endbossDead);
     this.x = this.spawnX;
+    this.animationManager = new EndbossAnimationManager(this);
   }
 
   animate() {
     IntervalHub.startInterval(() => this.updateState(), 1000 / 60);
-    IntervalHub.startInterval(() => this.updateAnimation(), 150);
-  }
-
-  updateAnimation() {
-    if (this.turning) {
-      this.animateAlert();
-      return;
-    }
-    this.resetAnimationIfStateChanged();
-    if (this.isDead()) return this.animateDead();
-    this.animateByState();
-  }
-
-  resetAnimationIfStateChanged() {
-    if (this.lastState !== this.state) {
-      this.currentImage = 0;
-      this.lastState = this.state;
-    }
-  }
-
-  animateByState() {
-    const map = {
-      hurt: () => this.animateHurt(),
-      alert: () => this.animateAlert(),
-      chase: () => this.animateWalking(),
-      return: () => this.animateWalking(),
-      attack: () => this.animateAttack(),
-      idle: () => this.animateAlert(),
-    };
-    (map[this.state] || map["idle"])();
+    IntervalHub.startInterval(
+      () => this.animationManager.updateAnimation(),
+      150,
+    );
   }
 
   updateState() {
@@ -296,34 +273,6 @@ class Endboss extends MovableObject {
     }
     if (!this.isJumpAttack) {
       this.state = "hurt";
-    }
-  }
-
-  animateWalking() {
-    this.playAnimation(this.endbossWalking);
-  }
-
-  animateAlert() {
-    this.playAnimation(this.endbossAlert);
-  }
-
-  animateAttack() {
-    this.playAnimation(this.endbossAttack);
-  }
-
-  animateHurt() {
-    this.playAnimation(this.endbossHurt);
-  }
-
-  animateDead() {
-    if (!this.isDeadAnimationPlaying) {
-      this.isDeadAnimationPlaying = true;
-      this.deadAnimationFrame = 0;
-    }
-    if (this.deadAnimationFrame < this.endbossDead.length) {
-      this.setImageFromCache(this.endbossDead, this.deadAnimationFrame++);
-    } else {
-      this.setImageFromCache(this.endbossDead, this.endbossDead.length - 1);
     }
   }
 
