@@ -1,48 +1,56 @@
-class Chick extends MovableObject {
-  y = 380;
-  height = 30;
-  width = 40;
-  offset = { top: 0, right: 5, bottom: 5, left: 5 };
-  damage = 10;
-  isDeadAnimationPlaying = false;
-  littleChickenWalking = ImageHub.chicken_small.walk;
-  littleChickenDead = ImageHub.chicken_small.dead;
+/* =========================
+ * Chick Enemy
+ * Small, fast ground enemy with simple AI behavior
+ * ========================= */
+  class Chick extends MovableObject {
+    y = 380;
+    height = 30;
+    width = 40;
+    offset = { top: 0, right: 5, bottom: 5, left: 5 };
+    damage = 10;
+    isDeadAnimationPlaying = false;
+    littleChickenWalking = ImageHub.chicken_small.walk;
+    littleChickenDead = ImageHub.chicken_small.dead;
 
-  constructor() {
-    super().loadImage("img/2_enemies_chicken/chicken_normal/1_walk/1_w.png");
-    this.loadImages(this.littleChickenWalking);
-    this.loadImages(this.littleChickenDead);
-    this.x = 800 + Math.random() * 4500;
-    this.speed = 0.15 + Math.random() * 2;
-  }
+    constructor() {
+      super().loadImage("img/2_enemies_chicken/chicken_normal/1_walk/1_w.png");
+      this.loadImages(this.littleChickenWalking);
+      this.loadImages(this.littleChickenDead);
+      this.x = 800 + Math.random() * 4500;
+      this.speed = 0.15 + Math.random() * 2;
+    }
 
-  die() {
-    this.isDeadAnimationPlaying = true;
-    this.speed = 0;
-    this.setImageFromCache(this.littleChickenDead, 0);
-    setTimeout(() => {
-      if (this.world) {
-        const index = this.world.level.enemies.indexOf(this);
-        if (index > -1) {
-          this.world.level.enemies.splice(index, 1);
-        }
-      }
-    }, 1000);
-  }
-
-  animate() {
-    IntervalHub.startInterval(() => {
-      if (this.isDeadAnimationPlaying) return;
-      this.lastX = this.x;
-      this.lastY = this.y;
-      this.moveLeft();
-    }, 1000 / 60);
-    IntervalHub.startInterval(() => {
-      if (!this.isDeadAnimationPlaying) {
-        this.playAnimation(this.littleChickenWalking);
-      } else {
+  /* ---------- Lifecycle ---------- */
+    // Handles enemy death and removal from world.
+      die() {
+        this.isDeadAnimationPlaying = true;
+        this.speed = 0;
         this.setImageFromCache(this.littleChickenDead, 0);
+        setTimeout(() => {
+          if (this.world) {
+            const index = this.world.level.enemies.indexOf(this);
+            if (index > -1) {
+              this.world.level.enemies.splice(index, 1);
+            }
+          }
+        }, 1000);
       }
-    }, 200);
+
+  /* ---------- Animation ---------- */
+    // Starts movement and animation loops.
+      animate() {
+        IntervalHub.startInterval(() => {
+          if (this.isDeadAnimationPlaying) return;
+          this.lastX = this.x;
+          this.lastY = this.y;
+          this.moveLeft();
+        }, 1000 / 60);
+        IntervalHub.startInterval(() => {
+          if (!this.isDeadAnimationPlaying) {
+            this.playAnimation(this.littleChickenWalking);
+          } else {
+            this.setImageFromCache(this.littleChickenDead, 0);
+          }
+        }, 200);
+      }
   }
-}
