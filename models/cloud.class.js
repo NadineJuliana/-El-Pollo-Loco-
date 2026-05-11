@@ -1,7 +1,8 @@
-/* =========================
- * Cloud
+/**
+ * @class Cloud
+ * @extends MovableObject
  * Represents a moving background cloud
- * ========================= */
+ */
   class Cloud extends MovableObject {
     width = 500;
     height = 250;
@@ -10,11 +11,11 @@
       super().loadImage("img/7_background/layers/4_clouds/1.png");
     }
 
-  /* ---------- Animation ---------- */
-    // Starts cloud movement animation.
-      animate() {
-        IntervalHub.startInterval(() => {
-          this.moveLeft();
-        }, 1000 / 60);
-      }
+    /* ---------- Animation ---------- */
+      /** Starts cloud movement animation.*/
+        animate() {
+          IntervalHub.startInterval(() => {
+            this.moveLeft();
+          }, 1000 / 60);
+        }
   }

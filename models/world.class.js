@@ -1,7 +1,7 @@
-/* =========================
- * Game World
+/**
+ * @class World
  * Manages all game objects, systems and overall game flow
- * ========================= */
+ */
   class World {
       /**
        * Creates a new game world instance.
@@ -35,13 +35,13 @@
         }
 
     /* ---------- World Initialization ---------- */
-      // Connects all game objects with the current world instance.
+      /** Connects all game objects with the current world instance.*/
         setWorld() {
           this.character.world = this;
           this.level.enemies.forEach((e) => (e.world = this));
         }
       
-      // Initializes animations and prepares game objects.
+      /** Initializes animations and prepares game objects.*/
         initObjects() {
           this.character.animate();
           this.level.enemies.forEach((enemy) => {

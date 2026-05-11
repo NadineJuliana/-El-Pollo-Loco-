@@ -1,7 +1,7 @@
-/* =========================
- * Image Hub
+/**
+ * @class ImageHub
  * Central registry for all game assets (animations, sprites, UI)
- * ========================= */
+ */
   class ImageHub {
     /* ---------- Character ---------- */
       static character = {

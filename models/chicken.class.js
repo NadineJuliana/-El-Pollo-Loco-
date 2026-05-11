@@ -1,7 +1,8 @@
-/* =========================
- * Chicken Enemy
+/**
+ * @class Chicken
+ * @extends MovableObject
  * Basic ground enemy with simple movement and death animation
- * ========================= */
+ */
   class Chicken extends MovableObject {
     y = 360;
     height = 50;
@@ -20,37 +21,37 @@
       this.speed = 0.15 + Math.random() * 1;
     }
 
-  /* ---------- Enemy State ---------- */
-    // Handles enemy death and removal from world.
-      die() {
-        this.isDeadAnimationPlaying = true;
-        this.speed = 0;
-        this.setImageFromCache(this.bigChickenDead, 0);
-        setTimeout(() => {
-          if (this.world) {
-            const index = this.world.level.enemies.indexOf(this);
-            if (index > -1) {
-              this.world.level.enemies.splice(index, 1);
+    /* ---------- Enemy State ---------- */
+      /** Handles enemy death and removal from world.*/
+        die() {
+          this.isDeadAnimationPlaying = true;
+          this.speed = 0;
+          this.setImageFromCache(this.bigChickenDead, 0);
+          setTimeout(() => {
+            if (this.world) {
+              const index = this.world.level.enemies.indexOf(this);
+              if (index > -1) {
+                this.world.level.enemies.splice(index, 1);
+              }
             }
-          }
-        }, 1000);
-      }
+          }, 1000);
+        }
 
-  /* ---------- Animation ---------- */
-    // Starts movement and animation loops
-      animate() {
-        IntervalHub.startInterval(() => {
-          if (this.isDeadAnimationPlaying) return;
-          this.lastX = this.x;
-          this.lastY = this.y;
-          this.moveLeft();
-        }, 1000 / 60);
-        IntervalHub.startInterval(() => {
-          if (!this.isDeadAnimationPlaying) {
-            this.playAnimation(this.bigChickenWalking);
-          } else {
-            this.setImageFromCache(this.bigChickenDead, 0);
-          }
-        }, 200);
-      }
+    /* ---------- Animation ---------- */
+      /** Starts movement and animation loops.*/
+        animate() {
+          IntervalHub.startInterval(() => {
+            if (this.isDeadAnimationPlaying) return;
+            this.lastX = this.x;
+            this.lastY = this.y;
+            this.moveLeft();
+          }, 1000 / 60);
+          IntervalHub.startInterval(() => {
+            if (!this.isDeadAnimationPlaying) {
+              this.playAnimation(this.bigChickenWalking);
+            } else {
+              this.setImageFromCache(this.bigChickenDead, 0);
+            }
+          }, 200);
+        }
   }

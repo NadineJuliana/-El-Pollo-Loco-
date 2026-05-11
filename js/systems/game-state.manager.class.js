@@ -1,7 +1,7 @@
-/* =========================
- * Game State Manager
+/**
+ * @class GameStateManager
  * Handles win/lose conditions and global game state transitions
- * ========================= */
+ */
   class GameStateManager {
     /**
      * Creates a new game state manager.
@@ -12,7 +12,7 @@
       }
 
     /* ---------- Game State Checks ---------- */
-      //Checks whether the game has been won or lost.
+      /** Checks whether the game has been won or lost.*/
         checkGameOver() {
           if (this.handleCharacterDeath()) return;
           this.handleWinCondition();
@@ -35,7 +35,7 @@
           return false;
         }
 
-      // Checks win condition (endboss defeated).
+      /** Checks the win condition by verifying if the endboss is defeated.*/
         handleWinCondition() {
           const world = this.world;
           const endboss = world.level.enemies.find(
@@ -50,7 +50,7 @@
         }
 
     /* ---------- Controls ---------- */
-      // Stops all player inputs.
+      /** Stops all player inputs.*/
         stopControls() {
           Keyboard.RIGHT = false;
           Keyboard.LEFT = false;
@@ -59,22 +59,32 @@
         }
 
     /* ---------- State Conditions ---------- */
-      // Checks if death animation has fully completed.
+      /**
+       * Checks whether the death animation has fully completed.
+       * @param {Character} character
+       * @returns {boolean}
+       */
         isDeathAnimationFinished(character) {
           return (
             character.deadAnimationFrame >= character.imagesDead.length - 1 &&
             character.y >= character.groundLevel + 300
           );
         }
-      // Checks if endboss is fully defeated.
+
+      /**
+       * Checks whether the endboss is fully defeated.
+       * @param {Endboss} endboss
+       * @returns {boolean}
+       */
         isEndbossDead(endboss) {
           return (
             endboss.isDead() &&
             endboss.deadAnimationFrame >= endboss.endbossDead.length - 1
           );
         }
+
     /* ---------- Game End ---------- */
-      // Stops all systems and ends the game.
+      /** Stops all systems and ends the game.*/
         endGame() {
           this.world.isRunning = false;
           IntervalHub.stopAllIntervals();

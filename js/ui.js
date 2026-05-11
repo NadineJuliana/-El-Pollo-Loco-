@@ -1,14 +1,18 @@
-/* =========================
+/**
  * UI Controller
  * Handles dialogs, UI states, fullscreen, sound and game screens
- * ========================= */
+ * @module UIController
+ */
   /* ---------- UI State ---------- */
     let controlsVisible = false;
     let winSound = false;
     let loseSound = false;
 
   /* ---------- Dialog Handling ---------- */
-    // Opens a dialog depending on device and orientation.
+    /**
+     * Opens a dialog depending on device and orientation.
+     * @param {string} id Element ID of the dialog
+     */
       function openDialog(id) {
         const dialog = document.getElementById(id);
         if (dialog.open) dialog.close();
@@ -26,58 +30,85 @@
         }
       }
 
-    // Opens instructions dialog.
+    /** Opens instructions dialog.*/
       function openInstructions() {
         openDialog("instructions");
       }
 
-    // Opens imprint dialog.
+    /** Opens imprint dialog.*/
       function openImprint() {
         openDialog("imprint");
       }
 
-    // Closes instructions dialog.
+    /** Closes instructions dialog.*/
       function closeInstructions() {
         document.getElementById("instructions").close();
       }
 
-    // Closes imprint dialog.
+    /** Closes imprint dialog.*/
       function closeImprint() {
         document.getElementById("imprint").close();
       }
 
   /* ---------- Game UI State ---------- */
-    // Updates win/lose screens based on game state.
-      function updateUI() {
-        if (!world) return;
-        if (world.isGameOver) {
-          document.getElementById("lostScreen").classList.remove("d-none");
-          if (!loseSound) {
-            AudioHub.playOne(AudioHub.gameOver);
-            loseSound = true;
+    /**
+     * Shows or hides a game screen and triggers a sound once.
+     * Returns whether the sound has been played already.
+     * @param {boolean} condition
+     * @param {string} elementId
+     * @param {boolean} soundAlreadyPlayed
+     * @param {function} playSound
+     * @returns {boolean}
+     */
+      function handleGameScreen(condition, elementId, soundAlreadyPlayed, playSound) {
+        const element = document.getElementById(elementId);
+        if (condition) {
+          element.classList.remove("d-none");
+          if (!soundAlreadyPlayed) {
+            playSound();
+            return true;
           }
         } else {
-          document.getElementById("lostScreen").classList.add("d-none");
+          element.classList.add("d-none");
         }
-        if (world.isGameWon) {
-          document.getElementById("winScreen").classList.remove("d-none");
-          if (!winSound) {
-            AudioHub.playOne(AudioHub.gameWin);
-            winSound = true;
-          }
-        } else {
-          document.getElementById("winScreen").classList.add("d-none");
-        }
+        return soundAlreadyPlayed;
       }
 
-    // Toggles image based on condition.
+    /** Updates win/lose screens based on game state.*/
+      function updateUI() {
+        if (!world) return;
+        loseSound = handleGameScreen(
+          world.isGameOver,
+          "lostScreen",
+          loseSound,
+          function playLoseSound() {
+            AudioHub.playOne(AudioHub.gameOver);
+          },
+        );
+        winSound = handleGameScreen(
+          world.isGameWon,
+          "winScreen",
+          winSound,
+          function playWinSound() {
+            AudioHub.playOne(AudioHub.gameWin);
+          },
+        );
+      }
+
+    /**
+     * Toggles image based on condition.
+     * @param {string} elementId
+     * @param {boolean} condition
+     * @param {string} imageOn
+     * @param {string} imageOff
+     */
       function toggleImage(elementId, condition, imageOn, imageOff) {
         const el = document.getElementById(elementId);
         el.src = condition ? imageOn : imageOff;
       }
 
   /* ---------- Game Flow ---------- */
-    // Returns to home screen and resets game state.
+    /** Returns to home screen and resets game state.*/
       function backHome() {
         if (document.fullscreenElement) {
           document.exitFullscreen();
@@ -95,7 +126,7 @@
         updateFullscreenUI(false);
       }
 
-    // Restarts the game.
+    /** Restarts the game.*/
       function restartGame() {
         winSound = false;
         loseSound = false;
@@ -111,7 +142,7 @@
       }
 
   /* ---------- Screen / Layout ---------- */
-    // Toggles fullscreen mode.
+    /** Toggles fullscreen mode.*/
       function toggleScreen() {
         const screen = document.getElementById("canvasContent");
         if (!document.fullscreenElement) {
@@ -124,14 +155,14 @@
         requestAnimationFrame(() => scaleCanvasContent());
       }
 
-    // Toggles mobile controls visibility.
+    /** Toggles mobile controls visibility.*/
       function toggleControls() {
         if (!isTouch) return;
         controlsVisible = !controlsVisible;
         applyControlsState();
       }
 
-    // Toggles sound on/off.
+    /** Toggles sound on/off.*/
       function toggleSound() {
         if (AudioHub.muted) {
           AudioHub.unmuteAll();
@@ -146,7 +177,10 @@
         );
       }
 
-    // Updates fullscreen button UI state.
+    /**
+     * Updates fullscreen button UI state.
+     * @param {boolean} isFullscreen
+     */
       function updateFullscreenUI(isFullscreen) {
         const button = document.getElementById("screenButton");
         if (isFullscreen) {
@@ -162,7 +196,7 @@
         );
       }
 
-    // Applies mobile controls visibility state.
+    /** Applies mobile controls visibility state.*/
       function applyControlsState() {
         const controls = document.getElementById("mobileControls");
         const button = document.getElementById("controlsButton");
@@ -176,7 +210,7 @@
       }
 
   /* ---------- Canvas Scaling ---------- */  
-    // Scales canvas depending on screen size and fullscreen state.
+    /** Scales canvas depending on screen size and fullscreen state.*/
       function scaleCanvasContent() {
         const container = document.getElementById("canvasContent");
         if (document.fullscreenElement) {

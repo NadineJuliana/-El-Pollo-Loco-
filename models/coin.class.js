@@ -1,7 +1,8 @@
-/* =========================
- * Coin
+/**
+ * @class Coin
+ * @extends DrawableObject
  * Represents a collectible coin object
- * ========================= */
+ */
   class Coin extends DrawableObject {
     height = 90;
     width = 90;
@@ -14,11 +15,11 @@
       this.loadImages(this.coinImage);
     }
 
-  /* ---------- Animation ---------- */
-    // Starts the coin animation loop.
-      animate() {
-        IntervalHub.startInterval(() => {
-          this.playAnimation(this.coinImage);
-        }, 200);
-      }
+    /* ---------- Animation ---------- */
+      /** Starts the coin animation loop.*/
+        animate() {
+          IntervalHub.startInterval(() => {
+            this.playAnimation(this.coinImage);
+          }, 200);
+        }
   }

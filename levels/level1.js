@@ -1,11 +1,13 @@
-/* =========================
+/**
  * Level Setup
  * Defines all objects for the active game level
- * ========================= */
-    let level;
+ * @module Level1
+ */
+  
+  let level;
 
   /* ---------- Level Initialization ---------- */
-    // Initializes level with enemies, background and collectibles.
+    /** Initializes level with enemies, background and collectibles.*/
       function initLevel() {
         level = new Level(
           [

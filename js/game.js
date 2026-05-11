@@ -1,7 +1,8 @@
-/* =========================
+/**
  * Main game entry point.
  * Handles game initialization, device setup and global UI behavior.
- * ========================= */
+ * @module Game
+ */
   /* ---------- Global State ---------- */ 
     let canvas;
     let world;
@@ -9,7 +10,7 @@
     let hasValidOrientation = false;
 
   /* ---------- Game Initialization ---------- */
-    // Initializes canvas, systems and world.
+    /** Initializes canvas, systems and world.*/
       function init() {
         canvas = document.getElementById("canvas");
         IntervalHub.stopAllIntervals();
@@ -21,7 +22,7 @@
         world = new World(canvas, level);
       }
 
-    // Starts a new game session.
+    /** Starts a new game session.*/
       function startGame() {
         winSound = false;
         loseSound = false;
@@ -35,7 +36,7 @@
         disableContextMenu();
       }
 
-    // Starts periodic UI updates.
+    /** Starts periodic UI updates.*/
       function startUIUpdater() {
         setInterval(() => {
           updateUI();
@@ -51,7 +52,7 @@
         return "ontouchstart" in window || navigator.maxTouchPoints > 0;
       }
 
-    //Initializes mobile control handling depending on the device type.
+    /** Initializes mobile control handling depending on the device type.*/
       function initControls() {
         const button = document.getElementById("controlsButton");
         isTouch = isTouchDevice();
@@ -66,7 +67,7 @@
         applyControlsState();
       }
 
-    //Prevents the browser context menu on mobile control buttons.
+    /** Prevents the browser context menu on mobile control buttons.*/
       function disableContextMenu() {
         const mobileButtons = document.querySelectorAll("#mobileControls button");
         mobileButtons.forEach((btn) => {
@@ -77,17 +78,17 @@
       }
 
   /* ---------- Layout Handling ---------- */
-    //Displays the desktop layout.
+    /** Displays the desktop layout.*/
       function showDesktop() {
         setDisplay(true, true, true, false);
       }
 
-    //Displays the mobile portrait layout.
+    /** Displays the mobile portrait layout.*/
       function showMobilePortrait() {
         setDisplay(false, false, false, true);
       }
 
-    //Displays the mobile landscape layout.
+    /** Displays the mobile landscape layout.*/
       function showMobileLandscape() {
         setDisplay(true, false, false, false);
       }
@@ -117,7 +118,7 @@
         return window.matchMedia("(max-width: 768px)").matches;
       }
 
-    //Updates the game layout depending on screen size and orientation.
+    /** Updates the game layout depending on screen size and orientation.*/
       function updateLayout() {
         const isPortrait = window.innerHeight > window.innerWidth;
         const isMobile = isMobileLayout();

@@ -1,7 +1,7 @@
-/* =========================
- * Game Loop
+/**
+ * @class GameLoop
  * Handles continuous game updates and system coordination
- * ========================= */
+ */
   class GameLoop {
     /**
      * Creates a new game loop instance.
@@ -12,7 +12,7 @@
       }
 
     /* ---------- Game Loop ---------- */
-      // Starts the main update loop (60 FPS).
+      /** Starts the main update loop (60 FPS).*/
         run() {
           IntervalHub.startInterval(() => {
             if (!this.world.isRunning) return;
@@ -29,7 +29,7 @@
         }
 
     /* ---------- State Updates ---------- */
-      // Stores previous positions for movement calculations.
+      /** Stores previous positions for movement calculations.*/
         updatePreviousPositions() {
           const world = this.world;
           world.character.lastX = world.character.x;
@@ -40,7 +40,7 @@
           });
         }
 
-      //Updates all collectible-related status bars.
+      /** Updates all collectible-related status bars.*/
         updateStatusbars() {
           const world = this.world;
           const coinPercent = Math.round(
@@ -55,7 +55,7 @@
           );
         }
 
-      // Updates endboss behavior based on player distance.
+      /** Updates endboss behavior based on player distance.*/
         updateEndbossState() {
           const world = this.world;
           world.level.enemies.forEach((enemy) => {

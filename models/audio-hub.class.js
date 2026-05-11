@@ -1,7 +1,7 @@
-/* =========================
- * Audio Hub
+/**
+ * @class AudioHub
  * Centralized audio management for music and sound effects
- * ========================= */
+ */
   class AudioHub {
     /* ---------- Global Audio State ---------- */
       static muted = false;
@@ -56,10 +56,9 @@
       ];
     
     /* ---------- Audio Initialization ---------- */
-      // Initializes global audio settings.
+      /** Initializes global audio settings.*/
         static initSounds() {
           this.backgroundMusic.loop = true;
-
           this.allSounds.forEach((sound) => {
             sound.volume = 0.1;
           });
@@ -79,12 +78,15 @@
           if (playPromise) playPromise.catch(() => {});
         }
 
-      // Stops a specific sound.
+      /** 
+       * Stops a specific sound.
+       * @param {HTMLAudioElement} sound - Audio element to play.
+       */
         static stopOne(sound) {
           sound.pause();
         }
 
-      // Stops all currently playing sounds.
+      /** Stops all currently playing sounds.*/
         static stopAll() {
           AudioHub.allSounds.forEach((sound) => {
             if (!sound.paused) {
@@ -95,28 +97,28 @@
         }
 
     /* ---------- Background Music ---------- */
-      // Starts background music playback.
+      /** Starts background music playback.*/
         static startBackgroundMusic() {
           if (this.muted) return;
           this.backgroundMusic.currentTime = 0;
           this.backgroundMusic.play();
         }
       
-      // Stops background music playback.
+      /** Stops background music playback.*/
         static stopBackgroundMusic() {
           this.backgroundMusic.pause();
           this.backgroundMusic.currentTime = 0;
         }
 
     /* ---------- Mute Controls ---------- */
-      // Mutes all game audio.
+      /** Mutes all game audio.*/
         static muteAll() {
           AudioHub.muted = true;
           AudioHub.allSounds.forEach((sound) => (sound.muted = true));
           localStorage.setItem("gameMuted", "true");
         }
 
-      // Unmutes all game audio.
+      /** Unmutes all game audio.*/
         static unmuteAll() {
           AudioHub.muted = false;
           AudioHub.allSounds.forEach((sound) => (sound.muted = false));
@@ -126,7 +128,7 @@
           }
         }
 
-      // Loads saved mute settings from local storage.
+      /** Loads saved mute settings from local storage.*/
         static loadMuteStatus() {
           const savedMuted = localStorage.getItem("gameMuted");
           AudioHub.muted = savedMuted === "true" ? true : false;
