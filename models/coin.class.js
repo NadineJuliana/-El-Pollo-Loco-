@@ -1,25 +1,24 @@
 /**
  * @class Coin
  * @extends DrawableObject
- * Represents a collectible coin object
+ * @description Represents a collectible coin object
  */
-  class Coin extends DrawableObject {
-    height = 90;
-    width = 90;
-    isCollected = false;
-    coinImage = ImageHub.coins.coin;
-    offset = { top: 30, right: 30, bottom: 30, left: 30 };
+class Coin extends DrawableObject {
+  height = 90;
+  width = 90;
+  isCollected = false;
+  coinImage = ImageHub.coins.coin;
+  offset = { top: 30, right: 30, bottom: 30, left: 30 };
 
-    constructor() {
-      super().loadImage("img/5_coins/coin_1.png");
-      this.loadImages(this.coinImage);
-    }
-
-    /* ---------- Animation ---------- */
-      /** Starts the coin animation loop.*/
-        animate() {
-          IntervalHub.startInterval(() => {
-            this.playAnimation(this.coinImage);
-          }, 200);
-        }
+  constructor() {
+    super().loadImage("img/5_coins/coin_1.png");
+    this.loadImages(this.coinImage);
   }
+
+  /** Starts the coin animation loop.*/
+  animate() {
+    IntervalHub.startInterval(() => {
+      this.playAnimation(this.coinImage);
+    }, 200);
+  }
+}

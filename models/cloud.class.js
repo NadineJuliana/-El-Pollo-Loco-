@@ -1,21 +1,20 @@
 /**
  * @class Cloud
  * @extends MovableObject
- * Represents a moving background cloud
+ * @description Represents a moving background cloud
  */
-  class Cloud extends MovableObject {
-    width = 500;
-    height = 250;
+class Cloud extends MovableObject {
+  width = 500;
+  height = 250;
 
-    constructor() {
-      super().loadImage("img/7_background/layers/4_clouds/1.png");
-    }
-
-    /* ---------- Animation ---------- */
-      /** Starts cloud movement animation.*/
-        animate() {
-          IntervalHub.startInterval(() => {
-            this.moveLeft();
-          }, 1000 / 60);
-        }
+  constructor() {
+    super().loadImage("img/7_background/layers/4_clouds/1.png");
   }
+
+  /** Starts cloud movement animation.*/
+  animate() {
+    IntervalHub.startInterval(() => {
+      this.moveLeft();
+    }, 1000 / 60);
+  }
+}
