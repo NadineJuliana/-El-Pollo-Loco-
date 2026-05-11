@@ -1,0 +1,22 @@
+{
+  "source": {
+    "include": [
+      "./js",
+      "./levels",
+      "./models"
+    ],
+    "includePattern": ".+\\.js$",
+    "excludePattern": "(node_modules|out|dist|^_)"
+  },
+  "opts": {
+    "destination": "./out/",
+    "recurse": true,
+    "template": "templates/default",
+    "readme": "./README.md"
+  },
+  "plugins": ["plugins/markdown"],
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  }
+}
