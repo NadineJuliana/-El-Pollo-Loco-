@@ -51,6 +51,7 @@ class StatusbarCoin extends DrawableObject {
     if (percent <= 40) return 2;
     if (percent <= 60) return 3;
     if (percent <= 80) return 4;
+    if (percent < 100) return 4;
     return 5;
   }
 }
