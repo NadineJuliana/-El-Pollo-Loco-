@@ -269,7 +269,7 @@ class CollisionManager {
    * @param {Endboss} enemy
    */
   hitEndboss(enemy) {
-    enemy.hit(10);
+    enemy.hit(20);
     this.world.statusbarEndboss.setPercentage(enemy.energy);
   }
 
